@@ -1,0 +1,34 @@
+:root{
+  --verde: #009330;
+  --amarillo: #ffce00;
+  --celeste: #3fb1e2;
+  --rojo: #f4323f;
+  --verde-claro: #5db836;
+  --naranja: #f39000;
+}
+
+/* Colores de texto */
+.text-verde { color: var(--verde); }
+.text-amarillo { color: var(--amarillo); }
+.text-celeste { color: var(--celeste); }
+.text-rojo { color: var(--rojo); }
+.text-verde-claro { color: var(--verde-claro); }
+.text-naranja { color: var(--naranja); }
+
+/* Colores de fondo */
+.bg-verde { background-color: var(--verde); }
+.bg-amarillo { background-color: var(--amarillo); }
+.bg-celeste { background-color: var(--celeste); }
+.bg-rojo { background-color: var(--rojo); }
+.bg-verde-claro { background-color: var(--verde-claro); }
+.bg-naranja { background-color: var(--naranja); }
+
+body{
+  background-color: var(--verde);
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
