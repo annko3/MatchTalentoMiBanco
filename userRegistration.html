@@ -124,7 +124,7 @@
           <label class="form-label">Desde</label>
           <div class="row g-4">
             <div class="col-6">
-              <select class="form-select py-3">
+              <select id="inputMesInicio" class="form-select py-3">
                 <option value="" disabled selected>Mes</option>
                 <option value="1">Enero</option>
                 <option value="2">Febrero</option>
@@ -141,7 +141,7 @@
               </select>
             </div>
             <div class="col-6">
-              <select class="form-select py-3">
+              <select id="inputAnioInicio" class="form-select py-3">
                 <option value="" disabled selected>Año</option>
                 <option value="2020">2020</option>
                 <option value="2021">2021</option>
@@ -157,7 +157,7 @@
           <label class="form-label">Hasta</label>
           <div class="row g-4">
             <div class="col-6">
-              <select class="form-select py-3">
+              <select id="inputMesFin" class="form-select py-3">
                 <option value="" disabled selected>Mes</option>
                 <option value="1">Enero</option>
                 <option value="2">Febrero</option>
@@ -174,7 +174,7 @@
               </select>
             </div>
             <div class="col-6">
-              <select class="form-select py-3">
+              <select id="inputAnioFin" class="form-select py-3">
                 <option value="" disabled selected>Año</option>
                 <option value="2020">2020</option>
                 <option value="2021">2021</option>
@@ -198,7 +198,21 @@
           <button onclick="añadirFormacion()" class="btn-rojo fw-bold rounded-5 py-3 bg-rojo text-white border-0">Añadir</button>
         </div>
 
-        
+        <div id="paso5" class="d-none d-grid gap-3">
+          <h4 class="text-black fw-bold text-center">Formación</h4>
+          <h5 class="text-black fw-bold text-start">EDUCACION</h5>
+
+          <div id="listaFormacionesContainer"></div>
+          <div id="multimediaContainer" class="mt-3"></div>
+  
+          <button onclick="volverAFormulario()" class="btn-naranja fw-bold rounded-5 py-3 bg-transparent text-celeste border-0">
+            + Añadir nueva formación
+          </button>
+
+          <button onclick="dh()" class="btn-rojo fw-bold rounded-5 py-3 bg-rojo text-white border-0">
+            Continuar
+          </button>
+        </div>
         
       </div>
     </main>
