@@ -16,6 +16,9 @@ import {
 } from "../firebase/config.js";
 
 let emailTemp = "";
+let formaciones = [];
+let archivosSeleccionados = []; // Archivos multimedia actuales
+let archivosTemporales = []; // ← DECLARAR ESTA VARIABLE
 
 // Función para mostrar mensajes
 function mostrarMensaje(titulo, mensaje, tipo = "success") {
@@ -122,7 +125,7 @@ window.validarYCambiarAPaso4 = function () {
   const today = new Date();
   let age = today.getFullYear() - birthDateObj.getFullYear();
   const monthDiff = today.getMonth() - birthDateObj.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+  if (monthDiff < 0   || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
     age--;
   }
   
@@ -158,6 +161,263 @@ window.validarYCambiarAPaso4 = function () {
 
   document.getElementById("paso3").classList.add("d-none");
   document.getElementById("paso4").classList.remove("d-none");
+};
+
+window.añadirFormacion = function () {
+  const institucionEducativa = document.getElementById("inputInstitution").value;
+  const tituloObtenido = document.getElementById("inputDegree").value;
+  const estadoSeleccionado = document.querySelector('input[name="estado"]:checked');
+  const estadoFormacion = estadoSeleccionado ? estadoSeleccionado.value : "";
+  const mesInicio = document.getElementById("inputMesInicio").value;
+  const anioInicio = document.getElementById("inputAnioInicio").value;
+  const mesFin = document.getElementById("inputMesFin").value;
+  const anioFin = document.getElementById("inputAnioFin").value;
+
+  if (!institucionEducativa) {
+    mostrarMensaje("Error", "Ingresa el Nombre de la Institución", "error");
+    return;
+  }
+
+  if (!tituloObtenido) {
+    mostrarMensaje("Error", "Ingresa el Título Obtenido", "error");
+    return;
+  }
+
+  if (!estadoFormacion) {
+    mostrarMensaje("Error", "Selecciona el Estado de la Formación", "error");
+    return;
+  }
+
+  if (!mesInicio || !anioInicio) {
+    mostrarMensaje("Error", "Selecciona la fecha de inicio", "error");
+    return;
+  }
+
+  if (!mesFin || !anioFin) {
+    mostrarMensaje("Error", "Selecciona la fecha de fin", "error");
+    return;
+  }
+
+  // ✅ Crear nueva formación con ID único
+  const nuevaFormacion = {
+    id: Date.now(), // ID único para identificar cada formación
+    institucion: institucionEducativa,
+    titulo: tituloObtenido,
+    estado: estadoFormacion,
+    desde: { mes: mesInicio, año: anioInicio },
+    hasta: { mes: mesFin, año: anioFin },
+    multimedia: [...archivosTemporales] // Copiar archivos temporales
+  };
+
+  // ✅ Solo un push
+  formaciones.push(nuevaFormacion);
+
+  // Limpiar formulario
+  document.getElementById("inputInstitution").value = "";
+  document.getElementById("inputDegree").value = "";
+  document.getElementById("inputMesInicio").value = "";
+  document.getElementById("inputAnioInicio").value = "";
+  document.getElementById("inputMesFin").value = "";
+  document.getElementById("inputAnioFin").value = "";
+  document.getElementById("estadoCursando").checked = true;
+
+  // Limpiar archivos temporales
+  archivosTemporales = [];
+  mostrarListaArchivos();
+  
+  // Mostrar formaciones en paso 5
+  mostrarFormacionesEnPaso5();
+
+  // Cambiar al paso 5
+  document.getElementById("paso4").classList.add("d-none");
+  document.getElementById("paso5").classList.remove("d-none");
+
+  mostrarMensaje("Éxito", "Formación añadida correctamente", "success");
+};
+
+function mostrarFormacionesEnPaso5() {
+  const container = document.getElementById("listaFormacionesContainer");
+  if (!container) return;
+
+  if (formaciones.length === 0) {
+    container.innerHTML = '<p class="text-muted text-center">No hay formaciones añadidas</p>';
+    return;
+  }
+
+  container.innerHTML = formaciones.map((form) => `
+    <div class="border rounded-3 p-3 mb-3" style="background-color: #ffce00;">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="fw-bold">${form.institucion}</div>
+          <div class="text-muted">${form.titulo}</div>
+          <div class="small text-muted mt-1 text-black-50">
+            ${form.desde.mes}/${form.desde.año} - ${form.hasta.mes}/${form.hasta.año}
+          </div>
+        </div>
+        <button class="btn btn-sm btn-link text-danger" onclick="eliminarFormacion(${form.id})">
+          🗑️
+        </button>
+      </div>
+
+      ${form.multimedia && form.multimedia.length > 0 ? `
+        <div class="mt-3">
+          <div class="row g-2">
+            ${form.multimedia.map((archivo) => `
+              <div class="col-auto">
+                <div class="border rounded-2 p-1 text-center" style="width: 70px;">
+                  <img src="${archivo.miniatura}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                  <div class="small text-muted" style="font-size: 10px;">${archivo.nombre.substring(0, 8)}${archivo.nombre.length > 8 ? '...' : ''}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
+    </div>
+  `).join('');
+}
+
+window.eliminarFormacion = function(id) {
+  formaciones = formaciones.filter(form => form.id !== id);
+  mostrarFormacionesEnPaso5();
+  mostrarMensaje("Info", "Formación eliminada", "success");
+};
+
+window.volverAFormulario = function() {
+  archivosTemporales = [];
+  mostrarListaArchivos();
+  document.getElementById("paso5").classList.add("d-none");
+  document.getElementById("paso4").classList.remove("d-none");
+};
+
+window.finalizarRegistro = function() {
+  if (formaciones.length === 0) {
+    mostrarMensaje("Error", "Agrega al menos una formación", "error");
+    return;
+  }
+  window.registrarUsuario();
+};
+
+// ========== MULTIMEDIA ==========
+const inputArchivos = document.getElementById('inputArchivos');
+const btnSeleccionar = document.getElementById('btnSeleccionarArchivos');
+const listaArchivos = document.getElementById('listaArchivos');
+
+btnSeleccionar?.addEventListener('click', () => {
+  inputArchivos.click();
+});
+
+inputArchivos?.addEventListener('change', (e) => {
+  agregarArchivos(e.target.files);
+  inputArchivos.value = '';
+});
+
+function obtenerMiniatura(file) {
+  if (file.type.startsWith('image/')) {
+    return URL.createObjectURL(file);
+  } else if (file.type === 'application/pdf') {
+    return 'https://cdn-icons-png.flaticon.com/512/337/337946.png';
+  } else if (file.type.startsWith('video/')) {
+    return 'https://cdn-icons-png.flaticon.com/512/564/564327.png';
+  } else {
+    return 'https://cdn-icons-png.flaticon.com/512/136/136540.png';
+  }
+}
+
+function agregarArchivos(files) {
+  const maxSize = 10 * 1024 * 1024;
+  const formatosPermitidos = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf', 'video/mp4'];
+ 
+  for (let file of files) {
+    if (file.size > maxSize) {
+      mostrarMensaje('Error', `El archivo ${file.name} excede 10MB`, 'error');
+      continue;
+    }
+    
+    if (!formatosPermitidos.includes(file.type)) {
+      mostrarMensaje('Error', `Formato no permitido: ${file.name}`, 'error');
+      continue;
+    }
+    
+    // ✅ Usar archivosTemporales, NO archivosSeleccionados
+    archivosTemporales.push({
+      file: file,
+      nombre: file.name,
+      tipo: file.type,
+      tamaño: file.size,
+      miniatura: obtenerMiniatura(file)
+    });
+  }
+  
+  mostrarListaArchivos();
+}
+
+function mostrarListaArchivos() {
+  if (!listaArchivos) return;
+  
+  if (archivosTemporales.length === 0) {
+    listaArchivos.innerHTML = '';
+    return;
+  }
+  
+  listaArchivos.innerHTML = `
+    <div class="border rounded-3 p-3" style="background-color: #f8f9fa;">
+      <div class="fw-bold mb-2">Archivos para esta formación (${archivosTemporales.length})</div>
+      <div class="row g-2">
+        ${archivosTemporales.map((archivo, index) => `
+          <div class="col-auto">
+            <div class="border rounded-2 p-2 text-center position-relative">
+              <button class="btn btn-sm btn-link text-danger position-absolute top-0 end-0 p-0" onclick="eliminarArchivoTemp(${index})" style="font-size: 12px;">✕</button>
+              <img src="${archivo.miniatura}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
+              <div class="small text-muted mt-1">${archivo.nombre.substring(0, 10)}${archivo.nombre.length > 10 ? '...' : ''}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ✅ Función para eliminar archivo temporal
+window.eliminarArchivoTemp = function(index) {
+  archivosTemporales.splice(index, 1);
+  mostrarListaArchivos();
+};
+
+async function subirTodosLosArchivos(userId) {
+  const todasLasUrls = [];
+  
+  for (let formacion of formaciones) {
+    const urlsFormacion = [];
+    for (let item of formacion.multimedia) {
+      try {
+        const file = item.file;
+        const extension = file.name.split('.').pop();
+        const nombreArchivo = `${Date.now()}_${Math.random().toString(36).substring(7)}.${extension}`;
+        const path = `usuarios/${userId}/formaciones/${formacion.id}/${nombreArchivo}`;
+        
+        const storageRef = ref(storage, path);
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+        
+        urlsFormacion.push({
+          nombre: item.nombre,
+          url: url,
+          tipo: item.tipo,
+          tamaño: item.tamaño,
+          fecha: new Date()
+        });
+      } catch (error) {
+        console.error('Error al subir archivo:', error);
+      }
+    }
+    todasLasUrls.push({
+      formacionId: formacion.id,
+      archivos: urlsFormacion
+    });
+  }
+  
+  return todasLasUrls;
 }
 
 window.registrarUsuario = async function () {
@@ -168,6 +428,10 @@ window.registrarUsuario = async function () {
   const confirmPassword = document.getElementById("inputConfirmPassword").value;
   const departamento = document.getElementById('selectDepartamento')?.value;
   const distrito = document.getElementById('selectDistrito')?.value;
+  const birthDate = document.getElementById("inputBirthDate").value;
+  const idType = document.getElementById("inputIdType").value;
+  const idNumber = document.getElementById("inputIdNumber").value;
+  const phone = document.getElementById("inputPhone").value;
 
   if (!nombres || !apellidos || !email || !password || !confirmPassword) {
     mostrarMensaje("Error", "Completa todos los campos", "error");
@@ -192,23 +456,35 @@ window.registrarUsuario = async function () {
 
     await updateProfile(user, { displayName: `${nombres} ${apellidos}` });
 
-    const archivosSubidos = await subirArchivos(user.uid);
+    const archivosSubidos = await subirTodosLosArchivos(user.uid);
+
+    const formacionesParaGuardar = formaciones.map(form => ({
+      id: form.id,
+      institucion: form.institucion,
+      titulo: form.titulo,
+      estado: form.estado,
+      desde: form.desde,
+      hasta: form.hasta,
+      multimedia: archivosSubidos.find(f => f.formacionId === form.id)?.archivos || []
+    }));
 
     await setDoc(doc(db, "usuarios", user.uid), {
       nombres: nombres,
       apellidos: apellidos,
       email: email,
-      fechaRegistro: new Date(),
-      rol: "usuario",
-      activo: true,
+      fechaNacimiento: birthDate,
+      tipoIdentificacion: idType,
+      numeroIdentificacion: idNumber,
+      telefono: phone,
       departamento: departamento,
       distrito: distrito,
-      multimedia: archivosSubidos
+      formaciones: formacionesParaGuardar,
+      fechaRegistro: new Date(),
+      rol: "usuario",
+      activo: true
     });
 
-    mostrarMensaje("Éxito", archivosSubidos.length > 0 ? 
-      `¡Registro exitoso! Se subieron ${archivosSubidos.length} archivos` : 
-      "¡Usuario registrado correctamente!", "success");
+    mostrarMensaje("Éxito", "¡Usuario registrado correctamente!", "success");
     limpiarFormulario();
 
     setTimeout(() => {
@@ -267,115 +543,18 @@ document.getElementById("btn-google")?.addEventListener("click", async () => {
   }
 });
 
-// ========== MULTIMEDIA ==========
-const inputArchivos = document.getElementById('inputArchivos');
-const btnSeleccionar = document.getElementById('btnSeleccionarArchivos');
-const listaArchivos = document.getElementById('listaArchivos');
-let archivosSeleccionados = [];
-
-btnSeleccionar?.addEventListener('click', () => {
-  inputArchivos.click();
-});
-
-inputArchivos?.addEventListener('change', (e) => {
-  agregarArchivos(e.target.files);
-  inputArchivos.value = '';
-});
-
-function agregarArchivos(files) {
-  const maxSize = 10 * 1024 * 1024;
-  const formatosPermitidos = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf', 'video/mp4'];
-  
-  for (let file of files) {
-    if (file.size > maxSize) {
-      mostrarMensaje('Error', `El archivo ${file.name} excede 10MB`, 'error');
-      continue;
-    }
-    
-    if (!formatosPermitidos.includes(file.type)) {
-      mostrarMensaje('Error', `Formato no permitido: ${file.name}. Usa JPG, PNG, PDF o MP4`, 'error');
-      continue;
-    }
-    
-    archivosSeleccionados.push(file);
-  }
-  
-  mostrarListaArchivos();
-}
-
-function mostrarListaArchivos() {
-  if (!listaArchivos) return;
-  
-  if (archivosSeleccionados.length === 0) {
-    listaArchivos.innerHTML = '';
-    return;
-  }
-  
-  listaArchivos.innerHTML = `
-    <div class="border rounded-3 p-3" style="background-color: #f8f9fa;">
-      <div class="fw-bold mb-2">Archivos seleccionados (${archivosSeleccionados.length})</div>
-      ${archivosSeleccionados.map((file, index) => `
-        <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
-          <div class="d-flex align-items-center gap-2">
-            <span>${file.type.includes('image') ? '🖼️' : file.type.includes('pdf') ? '📄' : '🎥'}</span>
-            <div>
-              <div class="small fw-bold">${file.name}</div>
-              <div class="small text-muted">${(file.size / 1024 / 1024).toFixed(2)} MB</div>
-            </div>
-          </div>
-          <button class="btn btn-sm btn-link text-danger text-decoration-none" onclick="eliminarArchivo(${index})">✕</button>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
-
-window.eliminarArchivo = function(index) {
-  archivosSeleccionados.splice(index, 1);
-  mostrarListaArchivos();
-}
-
-async function subirArchivos(userId) {
-  if (archivosSeleccionados.length === 0) return [];
-  
-  const urls = [];
-  
-  for (let file of archivosSeleccionados) {
-    try {
-      const extension = file.name.split('.').pop();
-      const nombreArchivo = `${Date.now()}_${Math.random().toString(36).substring(7)}.${extension}`;
-      const path = `usuarios/${userId}/multimedia/${nombreArchivo}`;
-      
-      const storageRef = ref(storage, path);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      
-      urls.push({
-        nombre: file.name,
-        url: url,
-        tipo: file.type,
-        tamaño: file.size,
-        fecha: new Date()
-      });
-      
-    } catch (error) {
-      console.error('Error al subir archivo:', error);
-      mostrarMensaje('Error', `Error al subir ${file.name}`, 'error');
-    }
-  }
-  
-  return urls;
-}
-
 function limpiarFormulario() {
-  const inputs = ["inputName", "inputSurname", "inputEmail", "inputEmail2", "inputPassword", "inputConfirmPassword"];
+  const inputs = ["inputName", "inputSurname", "inputEmail", "inputEmail2", "inputPassword", "inputConfirmPassword", "inputBirthDate", "inputIdNumber", "inputPhone"];
   inputs.forEach(id => {
     const element = document.getElementById(id);
     if (element) element.value = "";
   });
   emailTemp = "";
   archivosSeleccionados = [];
+  archivosTemporales = [];
+  formaciones = [];
   mostrarListaArchivos();
+  mostrarFormacionesEnPaso5();
 }
 
 // Datos de ubicación
