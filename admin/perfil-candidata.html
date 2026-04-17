@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Perfil de Candidata | Análisis IA</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<script src="/js/tailwind.js"></script>
+</head>
+
+<body class="bg-slate-100 flex min-h-screen">
+
+	<div id="sidebar-placeholder"></div>
+
+	<main class="ml-72 flex-1 p-10">
+		<div class="flex justify-end mb-6">
+			<button onclick="history.back()" class="text-3xl text-gray-400 hover:text-mi-verde transition">
+				<i class='bx bx-undo'></i>
+			</button>
+		</div>
+
+		<div
+			class="bg-white rounded-[40px] shadow-2xl overflow-hidden flex border border-gray-100 max-w-6xl mx-auto min-h-[550px]">
+
+			<div class="w-1/3 bg-[#fdf8e1] p-12 flex flex-col items-center text-center">
+				<div class="w-44 h-44 bg-white rounded-full p-1 mb-8 shadow-lg border-4 border-mi-verde">
+					<img id="c-foto" src="" class="w-full h-full object-cover rounded-full"
+						onerror="this.src='https://ui-avatars.com/api/?name=Candidata&background=008f39&color=fff'">
+				</div>
+				<h2 id="c-nombre" class="text-2xl font-bold text-gray-800 italic mb-6 uppercase tracking-tight">Cargando...</h2>
+
+				<div class="text-left w-full space-y-4">
+					<div>
+						<p class="text-[10px] font-black text-gray-400 uppercase">Puesto Postulado:</p>
+						<p id="c-puesto" class="text-sm font-bold text-gray-700 italic">-</p>
+					</div>
+					<div>
+						<p class="text-[10px] font-black text-gray-400 uppercase">Email:</p>
+						<p id="c-email" class="text-sm font-bold text-gray-700">-</p>
+					</div>
+					<div>
+						<p class="text-[10px] font-black text-gray-400 uppercase">Teléfono:</p>
+						<p id="c-tel" class="text-sm font-bold text-gray-700">-</p>
+					</div>
+					<button id="btn-cv-preview"
+						class="w-full bg-mi-naranja text-white py-3 rounded-2xl font-bold mt-6 shadow-lg shadow-orange-100 hover:scale-105 transition">
+						CV: Previsualizar
+					</button>
+				</div>
+			</div>
+
+			<div class="w-2/3 p-12 flex flex-col justify-between">
+				<div class="grid grid-cols-3 gap-10">
+					<div class="relative w-32 h-32 mx-auto">
+						<canvas id="chartExp"></canvas>
+						<div id="textExp" class="absolute inset-0 flex items-center justify-center font-black text-2xl pt-2">0%
+						</div>
+						<p class="text-[11px] font-black mt-4 uppercase text-center text-gray-500">Experiencia</p>
+					</div>
+					<div class="relative w-32 h-32 mx-auto">
+						<canvas id="chartEdu"></canvas>
+						<div id="textEdu" class="absolute inset-0 flex items-center justify-center font-black text-2xl pt-2">0%
+						</div>
+						<p class="text-[11px] font-black mt-4 uppercase text-center text-gray-500">Educación</p>
+					</div>
+					<div class="relative w-32 h-32 mx-auto">
+						<canvas id="chartIdi"></canvas>
+						<div id="textIdi" class="absolute inset-0 flex items-center justify-center font-black text-2xl pt-2">0%
+						</div>
+						<p class="text-[11px] font-black mt-4 uppercase text-center text-gray-500">Idioma</p>
+					</div>
+				</div>
+
+				<div class="flex items-center gap-12 mt-12 bg-slate-50/50 p-10 rounded-[30px] border border-gray-100">
+					<div class="relative w-48 h-48 flex-shrink-0">
+						<canvas id="chartTotal"></canvas>
+						<div class="absolute inset-0 flex flex-col items-center justify-center">
+							<span id="textTotal" class="text-5xl font-black text-gray-800">0%</span>
+							<span class="text-[10px] uppercase font-black text-mi-verde tracking-widest mt-1">Total</span>
+						</div>
+					</div>
+					<div>
+						<h3 class="font-bold text-gray-800 italic text-xl mb-4">Resumen</h3>
+						<p id="c-resumen" class="text-xs text-gray-500 leading-relaxed text-justify italic">
+							Evaluando currículum... El motor Match IA está comparando las habilidades técnicas y blandas con los
+							requisitos de la vacante.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<script type="module">
+		import { cargarSidebarAdmin } from '../js/main.js';
+		import { auth, db } from '../assets/firebase/config.js';
+		import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+		// 1. Cargar el componente sidebar
+		await cargarSidebarAdmin();
+
+		// 2. Obtener el ID de la candidata de la URL
+		const idPostulante = new URLSearchParams(window.location.search).get('id');
+
+		async function init() {
+			if (!idPostulante) return;
+
+			try {
+				const snap = await getDoc(doc(db, "postulaciones", idPostulante));
+
+				if (snap.exists()) {
+					const data = snap.data();
+					const scores = data.matchScores || { exp: 0, edu: 0, idi: 0, total: 0 };
+
+					// Llenar datos de texto
+					document.getElementById('c-nombre').innerText = data.nombre || "Candidata";
+					document.getElementById('c-email').innerText = data.email || "-";
+					document.getElementById('c-puesto').innerText = data.tituloVacante || data.idVacante || "General";
+					document.getElementById('c-tel').innerText = data.telefono || "-";
+					if (data.resumenIA) document.getElementById('c-resumen').innerText = data.resumenIA;
+					if (data.cvUrl) {
+						document.getElementById('btn-cv-preview').onclick = () => window.open(data.cvUrl, '_blank');
+					} else {
+						document.getElementById('btn-cv-preview').onclick = () => alert('La candidata no tiene un CV previsualizable cargado.');
+					}
+
+					// Dibujar los 4 círculos
+					renderizarCirculo('chartExp', 'textExp', scores.exp, '#008f39');
+					renderizarCirculo('chartEdu', 'textEdu', scores.edu, '#555555');
+					renderizarCirculo('chartIdi', 'textIdi', scores.idi, '#999999');
+					renderizarCirculo('chartTotal', 'textTotal', scores.total, '#ffce00', 18);
+				}
+			} catch (e) { console.error("Error cargando perfil:", e); }
+		}
+
+		function renderizarCirculo(canvasId, textId, value, color, weight = 12) {
+			document.getElementById(textId).innerText = value + "%";
+			new Chart(document.getElementById(canvasId), {
+				type: 'doughnut',
+				data: {
+					datasets: [{
+						data: [value, 100 - value],
+						backgroundColor: [color, '#f1f5f9'],
+						borderWidth: 0
+					}]
+				},
+				options: {
+					cutout: '80%',
+					plugins: { tooltip: { enabled: false }, legend: { display: false } }
+				}
+			});
+		}
+
+		init();
+	</script>
+</body>
+
+</html>

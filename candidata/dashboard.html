@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Mi Perfil | Mibanco</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					colors: {
+						"mi-verde": "#008f39",
+						"mi-amarillo": "#ffdf00",
+						"mi-naranja": "#ff8000",
+						"mi-azul-soft": "#4fb3e8",
+						"mi-rojo": "#f4323f"
+					}
+				}
+			}
+		};
+	</script>
+</head>
+
+<body class="bg-mi-verde min-h-screen">
+	<div id="navbar-placeholder"></div>
+
+	<main class="max-w-6xl mx-auto px-6 pb-20 mt-8">
+		<div class="bg-mi-amarillo rounded-[40px] p-8 flex items-center justify-between shadow-xl mb-10 relative">
+			<div class="flex items-center gap-10">
+				<div
+					class="w-40 h-40 bg-white rounded-full border-4 border-white shadow-lg overflow-hidden cursor-pointer group relative"
+					onclick="document.getElementById('input-foto').click()">
+					<img id="user-foto-main" src="" alt="Foto de perfil" class="w-full h-full object-cover">
+					<div
+						class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+						<i class="bx bxs-camera text-white text-3xl"></i>
+					</div>
+				</div>
+
+				<div>
+					<h1 id="user-nombre" class="text-3xl font-black text-gray-800 uppercase tracking-tighter italic">Cargando...
+					</h1>
+					<p id="user-distrito" class="text-sm font-bold text-gray-700 italic mb-4">Distrito, Departamento</p>
+
+					<div class="space-y-1">
+						<p class="text-sm flex items-center gap-2">
+							<i class="bx bxs-envelope text-mi-rojo"></i>
+							<span id="user-email">-</span>
+						</p>
+						<p class="text-sm flex items-center gap-2">
+							<i class="bx bxs-phone text-blue-600"></i>
+							<span id="user-tel">-</span>
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<button onclick="abrirModalEdicion()"
+				class="absolute top-6 right-8 text-mi-rojo text-3xl hover:scale-110 transition">
+				<i class="bx bxs-edit"></i>
+			</button>
+		</div>
+
+		<div class="flex gap-10">
+			<aside class="w-64 bg-mi-amarillo rounded-[40px] p-8 h-fit shadow-xl flex flex-col gap-4">
+				<button onclick="mostrarSeccion('experiencia', this)"
+					class="nav-btn w-full py-3 px-6 bg-mi-azul-soft text-white font-bold rounded-full text-xs uppercase shadow-md transition">Experiencia</button>
+				<button onclick="mostrarSeccion('educacion', this)"
+					class="nav-btn w-full py-3 px-6 text-gray-700 font-bold hover:bg-white/20 rounded-full text-xs uppercase transition">Educación</button>
+				<button onclick="mostrarSeccion('certificaciones', this)"
+					class="nav-btn w-full py-3 px-6 text-gray-700 font-bold hover:bg-white/20 rounded-full text-xs uppercase transition">Certificaciones</button>
+				<button onclick="mostrarSeccion('idiomas', this)"
+					class="nav-btn w-full py-3 px-6 text-gray-700 font-bold hover:bg-white/20 rounded-full text-xs uppercase transition">Idiomas</button>
+				<button onclick="mostrarSeccion('documentos', this)"
+					class="nav-btn w-full py-3 px-6 text-gray-700 font-bold hover:bg-white/20 rounded-full text-xs uppercase transition">Documentos</button>
+			</aside>
+
+			<section class="flex-1 space-y-8">
+				<div id="sec-experiencia" class="seccion-perfil bg-mi-azul-soft rounded-[40px] p-10 text-white shadow-xl">
+					<div class="flex justify-between items-center mb-6">
+						<h2 class="text-2xl font-black uppercase italic tracking-widest text-white">Experiencia</h2>
+						<i onclick="abrirModalItem('Experiencia')"
+							class="bx bx-plus text-mi-naranja text-4xl cursor-pointer hover:scale-110"></i>
+					</div>
+					<div id="cont-experiencia" class="space-y-6"></div>
+				</div>
+
+				<div id="sec-educacion" class="seccion-perfil hidden bg-mi-azul-soft rounded-[40px] p-10 text-white shadow-xl">
+					<div class="flex justify-between items-center mb-6">
+						<h2 class="text-2xl font-black uppercase italic tracking-widest text-white">Educación</h2>
+						<i onclick="abrirModalItem('Educación')"
+							class="bx bx-plus text-mi-naranja text-4xl cursor-pointer hover:scale-110"></i>
+					</div>
+					<div id="cont-educacion" class="space-y-6"></div>
+				</div>
+
+				<div id="sec-certificaciones"
+					class="seccion-perfil hidden bg-mi-azul-soft rounded-[40px] p-10 text-white shadow-xl">
+					<div class="flex justify-between items-center mb-6">
+						<h2 class="text-2xl font-black uppercase italic tracking-widest text-white">Certificaciones</h2>
+						<i onclick="abrirModalItem('Certificación')"
+							class="bx bx-plus text-mi-naranja text-4xl cursor-pointer hover:scale-110"></i>
+					</div>
+					<div id="cont-certificaciones" class="space-y-6"></div>
+				</div>
+
+				<div id="sec-idiomas" class="seccion-perfil hidden bg-mi-azul-soft rounded-[40px] p-10 text-white shadow-xl">
+					<div class="flex justify-between items-center mb-6">
+						<h2 class="text-2xl font-black uppercase italic tracking-widest text-white">Idiomas</h2>
+						<i onclick="abrirModalItem('Idioma')"
+							class="bx bx-plus text-mi-naranja text-4xl cursor-pointer hover:scale-110"></i>
+					</div>
+					<div id="cont-idiomas" class="space-y-4"></div>
+				</div>
+
+				<div id="sec-documentos" class="seccion-perfil hidden bg-mi-azul-soft rounded-[40px] p-10 text-white shadow-xl">
+					<div class="flex justify-between items-center mb-6">
+						<h2 class="text-2xl font-black uppercase italic tracking-widest text-white">Documentos</h2>
+						<i class="bx bx-upload text-mi-amarillo text-4xl cursor-pointer hover:scale-110"
+							onclick="document.getElementById('input-cv').click()"></i>
+					</div>
+
+					<div class="bg-white/10 p-6 rounded-3xl flex items-center justify-between border border-white/20">
+						<div class="flex items-center gap-4">
+							<i class="bx bxs-file-pdf text-5xl text-mi-amarillo"></i>
+							<div>
+								<p class="font-bold">Currículum Vitae (CV)</p>
+								<p id="cv-nombre" class="text-xs opacity-60">No cargado</p>
+							</div>
+						</div>
+						<button id="btn-ver-cv"
+							class="hidden bg-mi-amarillo text-gray-800 px-6 py-2 rounded-full font-black text-xs">
+							Previsualizar
+						</button>
+					</div>
+				</div>
+			</section>
+		</div>
+	</main>
+
+	<div id="modal-edicion"
+		class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+		<div class="bg-white rounded-[40px] w-full max-w-md p-10 shadow-2xl">
+			<h3 class="text-2xl font-black text-mi-verde italic mb-6 uppercase">Editar Perfil</h3>
+
+			<div class="space-y-4">
+				<div>
+					<label class="block text-xs font-bold text-gray-400 uppercase mb-1">Nombre Completo</label>
+					<input type="text" id="edit-nombre"
+						class="w-full bg-gray-50 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-mi-verde">
+				</div>
+
+				<div>
+					<label class="block text-xs font-bold text-gray-400 uppercase mb-1">Teléfono</label>
+					<input type="text" id="edit-tel"
+						class="w-full bg-gray-50 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-mi-verde">
+				</div>
+
+				<div>
+					<label class="block text-xs font-bold text-gray-400 uppercase mb-1">Distrito (Lima)</label>
+					<input type="text" id="edit-distrito"
+						class="w-full bg-gray-50 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-mi-verde">
+				</div>
+			</div>
+
+			<div class="flex gap-4 mt-8">
+				<button onclick="cerrarModalEdicion()"
+					class="flex-1 py-4 text-gray-400 font-bold hover:text-gray-600 transition">Cancelar</button>
+				<button id="btn-guardar-perfil"
+					class="flex-1 py-4 bg-mi-verde text-white font-bold rounded-2xl shadow-lg hover:bg-green-700 transition">Guardar
+					Cambios</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="modal-item"
+		class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4">
+		<div class="bg-white rounded-[40px] w-full max-w-lg p-10 shadow-2xl">
+			<h3 id="modal-item-titulo" class="text-2xl font-black text-mi-verde italic mb-6 uppercase">Agregar</h3>
+
+			<div class="space-y-4">
+				<div>
+					<label id="label-campo1" class="block text-xs font-bold text-gray-400 uppercase mb-1">Campo 1</label>
+					<input type="text" id="item-campo1"
+						class="w-full bg-gray-50 p-4 rounded-2xl outline-none border focus:border-mi-verde">
+				</div>
+
+				<div>
+					<label id="label-campo2" class="block text-xs font-bold text-gray-400 uppercase mb-1">Campo 2</label>
+					<input type="text" id="item-campo2"
+						class="w-full bg-gray-50 p-4 rounded-2xl outline-none border focus:border-mi-verde">
+				</div>
+
+				<div id="grupo-fechas" class="grid grid-cols-2 gap-4">
+					<div>
+						<label id="label-inicio" class="block text-xs font-bold text-gray-400 uppercase mb-1">Inicio</label>
+						<input type="month" id="item-inicio" class="w-full bg-gray-50 p-4 rounded-2xl outline-none">
+					</div>
+					<div>
+						<label id="label-fin" class="block text-xs font-bold text-gray-400 uppercase mb-1">Fin</label>
+						<input type="month" id="item-fin" class="w-full bg-gray-50 p-4 rounded-2xl outline-none">
+					</div>
+				</div>
+
+				<div id="grupo-descripcion">
+					<label id="label-desc" class="block text-xs font-bold text-gray-400 uppercase mb-1">Descripción</label>
+					<textarea id="item-desc" class="w-full bg-gray-50 p-4 rounded-2xl outline-none h-24"></textarea>
+				</div>
+			</div>
+
+			<div class="flex gap-4 mt-8">
+				<button onclick="cerrarModalItem()"
+					class="flex-1 py-4 text-gray-400 font-bold uppercase text-xs">Cancelar</button>
+				<button id="btn-guardar-item"
+					class="flex-1 py-4 bg-mi-verde text-white font-bold rounded-2xl shadow-lg hover:bg-green-700 transition uppercase text-xs">Añadir
+					Item</button>
+			</div>
+		</div>
+	</div>
+
+	<input type="file" id="input-cv" accept=".pdf,.doc,.docx" class="hidden">
+	<input type="file" id="input-foto" accept="image/*" class="hidden">
+
+	<script type="module">
+		import { cargarNavbarCandidata } from "../js/main.js";
+		import { auth, db } from "../assets/firebase/config.js";
+		import {
+			doc,
+			getDoc,
+			updateDoc,
+			deleteDoc,
+			collection,
+			addDoc,
+			getDocs,
+			query,
+			orderBy,
+			serverTimestamp
+		} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+		await cargarNavbarCandidata();
+
+		let userRef;
+		let currentUser;
+		let tipoItemActual = "";
+		let itemEditandoId = null;
+
+		const textosVacios = {
+			experiencia: "Carga tus experiencias para mejorar el match...",
+			educacion: "Registra tus estudios (universidad, instituto)...",
+			certificaciones: "Agrega cursos, constancias y certificaciones relevantes...",
+			idiomas: "Agrega los idiomas que dominas y su nivel."
+		};
+
+		function mostrarVacio(idContenedor, texto) {
+			document.getElementById(idContenedor).innerHTML = `<p class="text-sm opacity-60 italic">${texto}</p>`;
+		}
+
+		function botonesAccion(coleccion, item) {
+			return `
+        <div class="flex gap-2 shrink-0">
+          <button onclick='editarItem("${coleccion}", ${JSON.stringify(item)})' class="bg-white/15 hover:bg-white/25 px-3 py-2 rounded-full text-xs font-bold transition">
+            <i class="bx bxs-edit"></i>
+          </button>
+          <button onclick="eliminarItem('${coleccion}', '${item.id}')" class="bg-mi-rojo/80 hover:bg-mi-rojo px-3 py-2 rounded-full text-xs font-bold transition">
+            <i class="bx bxs-trash"></i>
+          </button>
+        </div>
+      `;
+		}
+
+		function renderExperiencia(item) {
+			return `
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/20">
+          <div class="flex justify-between items-start gap-4 mb-2">
+            <div>
+              <h4 class="font-black text-lg uppercase">${item.campo1}</h4>
+              <p class="text-sm font-bold text-white/80">${item.campo2}</p>
+            </div>
+            ${botonesAccion("experiencia", item)}
+          </div>
+          <p class="text-xs font-bold whitespace-nowrap mb-3">${item.inicio || "Sin fecha"} ${item.fin ? `- ${item.fin}` : ""}</p>
+          ${item.descripcion ? `<p class="text-sm text-white/80 italic">${item.descripcion}</p>` : ""}
+        </div>
+      `;
+		}
+
+		function renderEducacion(item) {
+			return `
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/20">
+          <div class="flex justify-between items-start gap-4 mb-2">
+            <div>
+              <h4 class="font-black text-lg uppercase">${item.campo1}</h4>
+              <p class="text-sm font-bold text-white/80">${item.campo2}</p>
+            </div>
+            ${botonesAccion("educacion", item)}
+          </div>
+          <p class="text-xs font-bold whitespace-nowrap mb-3">${item.inicio || "Sin fecha"} ${item.fin ? `- ${item.fin}` : ""}</p>
+          ${item.descripcion ? `<p class="text-sm text-white/80 italic">${item.descripcion}</p>` : ""}
+        </div>
+      `;
+		}
+
+		function renderCertificacion(item) {
+			return `
+        <div class="bg-white/10 rounded-3xl p-6 border border-white/20">
+          <div class="flex justify-between items-start gap-4 mb-2">
+            <div>
+              <h4 class="font-black text-lg uppercase">${item.campo1}</h4>
+              <p class="text-sm font-bold text-white/80">${item.campo2}</p>
+            </div>
+            ${botonesAccion("certificaciones", item)}
+          </div>
+          <p class="text-xs font-bold whitespace-nowrap mb-3">${item.inicio || "Sin fecha"} ${item.fin ? `- ${item.fin}` : ""}</p>
+          ${item.descripcion ? `<p class="text-sm text-white/80 italic">${item.descripcion}</p>` : ""}
+        </div>
+      `;
+		}
+
+		function renderIdioma(item) {
+			return `
+        <div class="border-b border-white/20 pb-3 flex justify-between items-start gap-4">
+          <div class="flex-1">
+            <div class="flex justify-between gap-4">
+              <span>${item.campo1}</span>
+              <span class="font-bold">${item.campo2}</span>
+            </div>
+            ${item.descripcion ? `<p class="text-xs opacity-70 mt-1">${item.descripcion}</p>` : ""}
+          </div>
+          ${botonesAccion("idiomas", item)}
+        </div>
+      `;
+		}
+
+		async function cargarItems(nombreColeccion, idContenedor, renderFn) {
+			const contenedor = document.getElementById(idContenedor);
+			contenedor.innerHTML = "";
+
+			const ref = collection(db, "users", currentUser.uid, nombreColeccion);
+			const q = query(ref, orderBy("creadoEn", "desc"));
+			const snap = await getDocs(q);
+
+			if (snap.empty) {
+				mostrarVacio(idContenedor, textosVacios[nombreColeccion]);
+				return;
+			}
+
+			snap.forEach((docSnap) => {
+				const item = { id: docSnap.id, ...docSnap.data() };
+				contenedor.innerHTML += renderFn(item);
+			});
+		}
+
+		async function cargarTodoElPerfil() {
+			await Promise.all([
+				cargarItems("experiencia", "cont-experiencia", renderExperiencia),
+				cargarItems("educacion", "cont-educacion", renderEducacion),
+				cargarItems("certificaciones", "cont-certificaciones", renderCertificacion),
+				cargarItems("idiomas", "cont-idiomas", renderIdioma)
+			]);
+		}
+
+		function obtenerConfiguracion(tipo) {
+			const configs = {
+				"Experiencia": {
+					coleccion: "experiencia",
+					label1: "Cargo",
+					label2: "Empresa",
+					labelInicio: "Fecha inicio",
+					labelFin: "Fecha fin",
+					labelDesc: "Funciones o logros",
+					ph1: "Ej. Asesora Comercial",
+					ph2: "Ej. Mibanco",
+					phDesc: "Describe brevemente tus funciones o logros...",
+					usaFechas: true
+				},
+				"Educación": {
+					coleccion: "educacion",
+					label1: "Carrera o programa",
+					label2: "Institución",
+					labelInicio: "Fecha inicio",
+					labelFin: "Fecha fin",
+					labelDesc: "Detalle",
+					ph1: "Ej. Administración de Empresas",
+					ph2: "Ej. Universidad de Lima",
+					phDesc: "Ej. Bachiller, egresada, en curso, mención, etc.",
+					usaFechas: true
+				},
+				"Certificación": {
+					coleccion: "certificaciones",
+					label1: "Nombre de certificación",
+					label2: "Entidad emisora",
+					labelInicio: "Fecha emisión",
+					labelFin: "Fecha vencimiento",
+					labelDesc: "Detalle",
+					ph1: "Ej. Excel Avanzado",
+					ph2: "Ej. Coursera",
+					phDesc: "Ej. Código de certificado, horas, observaciones...",
+					usaFechas: true
+				},
+				"Idioma": {
+					coleccion: "idiomas",
+					label1: "Idioma",
+					label2: "Nivel",
+					labelInicio: "",
+					labelFin: "",
+					labelDesc: "Observación",
+					ph1: "Ej. Inglés",
+					ph2: "Ej. Intermedio",
+					phDesc: "Ej. Conversación, escritura, certificado, etc.",
+					usaFechas: false
+				}
+			};
+
+			return configs[tipo];
+		}
+
+		function obtenerTipoDesdeColeccion(coleccion) {
+			const mapa = {
+				experiencia: "Experiencia",
+				educacion: "Educación",
+				certificaciones: "Certificación",
+				idiomas: "Idioma"
+			};
+			return mapa[coleccion];
+		}
+
+		function obtenerRenderizador(coleccion) {
+			const mapa = {
+				experiencia: renderExperiencia,
+				educacion: renderEducacion,
+				certificaciones: renderCertificacion,
+				idiomas: renderIdioma
+			};
+			return mapa[coleccion];
+		}
+
+		function resetModalItem() {
+			itemEditandoId = null;
+			document.getElementById("btn-guardar-item").innerText = "Añadir Item";
+			document.getElementById("item-campo1").value = "";
+			document.getElementById("item-campo2").value = "";
+			document.getElementById("item-inicio").value = "";
+			document.getElementById("item-fin").value = "";
+			document.getElementById("item-desc").value = "";
+		}
+
+		auth.onAuthStateChanged(async (user) => {
+			if (!user) {
+				window.location.href = "../login.html";
+				return;
+			}
+
+			currentUser = user;
+			userRef = doc(db, "users", user.uid);
+
+			const snap = await getDoc(userRef);
+
+			if (snap.exists()) {
+				const d = snap.data();
+
+				document.getElementById("user-nombre").innerText = d.nombres || "Candidata";
+				document.getElementById("user-email").innerText = d.email || "-";
+				document.getElementById("user-tel").innerText = d.telefono || "-";
+				document.getElementById("user-distrito").innerText = `${d.distrito || "Distrito"}, Lima`;
+				document.getElementById("user-foto-main").src =
+					d.fotoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.nombres || "Candidata")}&background=008f39&color=fff`;
+
+				if (d.cvNombre) {
+					document.getElementById("cv-nombre").innerText = d.cvNombre;
+					document.getElementById("btn-ver-cv").classList.remove("hidden");
+				}
+
+				document.getElementById("edit-nombre").value = d.nombres || "";
+				document.getElementById("edit-tel").value = d.telefono || "";
+				document.getElementById("edit-distrito").value = d.distrito || "";
+			}
+
+			await cargarTodoElPerfil();
+		});
+
+		window.abrirModalEdicion = () => {
+			document.getElementById("modal-edicion").classList.remove("hidden");
+		};
+
+		window.cerrarModalEdicion = () => {
+			document.getElementById("modal-edicion").classList.add("hidden");
+		};
+
+		document.getElementById("btn-guardar-perfil").onclick = async () => {
+			const data = {
+				nombres: document.getElementById("edit-nombre").value,
+				telefono: document.getElementById("edit-tel").value,
+				distrito: document.getElementById("edit-distrito").value
+			};
+
+			await updateDoc(userRef, data);
+			cerrarModalEdicion();
+			location.reload();
+		};
+
+		window.mostrarSeccion = (id, btn) => {
+			document.querySelectorAll(".seccion-perfil").forEach((s) => s.classList.add("hidden"));
+
+			const seccionObjetivo = document.getElementById(`sec-${id}`);
+			if (seccionObjetivo) {
+				seccionObjetivo.classList.remove("hidden");
+			}
+
+			document.querySelectorAll(".nav-btn").forEach((b) => {
+				b.classList.remove("bg-mi-azul-soft", "text-white", "shadow-md");
+				b.classList.add("text-gray-700");
+			});
+
+			btn.classList.add("bg-mi-azul-soft", "text-white", "shadow-md");
+		};
+
+		window.abrirModalItem = (tipo) => {
+			tipoItemActual = tipo;
+			resetModalItem();
+
+			const cfg = obtenerConfiguracion(tipo);
+
+			document.getElementById("modal-item-titulo").innerText = `Agregar ${tipo}`;
+			document.getElementById("label-campo1").innerText = cfg.label1;
+			document.getElementById("label-campo2").innerText = cfg.label2;
+			document.getElementById("label-inicio").innerText = cfg.labelInicio;
+			document.getElementById("label-fin").innerText = cfg.labelFin;
+			document.getElementById("label-desc").innerText = cfg.labelDesc;
+
+			document.getElementById("item-campo1").placeholder = cfg.ph1;
+			document.getElementById("item-campo2").placeholder = cfg.ph2;
+			document.getElementById("item-desc").placeholder = cfg.phDesc;
+
+			if (cfg.usaFechas) {
+				document.getElementById("grupo-fechas").classList.remove("hidden");
+			} else {
+				document.getElementById("grupo-fechas").classList.add("hidden");
+			}
+
+			document.getElementById("modal-item").classList.remove("hidden");
+		};
+
+		window.cerrarModalItem = () => {
+			document.getElementById("modal-item").classList.add("hidden");
+			resetModalItem();
+		};
+
+		window.editarItem = (coleccion, item) => {
+			const tipo = obtenerTipoDesdeColeccion(coleccion);
+			const cfg = obtenerConfiguracion(tipo);
+
+			tipoItemActual = tipo;
+			itemEditandoId = item.id;
+
+			document.getElementById("modal-item-titulo").innerText = `Editar ${tipo}`;
+			document.getElementById("btn-guardar-item").innerText = "Guardar Cambios";
+
+			document.getElementById("label-campo1").innerText = cfg.label1;
+			document.getElementById("label-campo2").innerText = cfg.label2;
+			document.getElementById("label-inicio").innerText = cfg.labelInicio;
+			document.getElementById("label-fin").innerText = cfg.labelFin;
+			document.getElementById("label-desc").innerText = cfg.labelDesc;
+
+			document.getElementById("item-campo1").placeholder = cfg.ph1;
+			document.getElementById("item-campo2").placeholder = cfg.ph2;
+			document.getElementById("item-desc").placeholder = cfg.phDesc;
+
+			document.getElementById("item-campo1").value = item.campo1 || "";
+			document.getElementById("item-campo2").value = item.campo2 || "";
+			document.getElementById("item-inicio").value = item.inicio || "";
+			document.getElementById("item-fin").value = item.fin || "";
+			document.getElementById("item-desc").value = item.descripcion || "";
+
+			if (cfg.usaFechas) {
+				document.getElementById("grupo-fechas").classList.remove("hidden");
+			} else {
+				document.getElementById("grupo-fechas").classList.add("hidden");
+			}
+
+			document.getElementById("modal-item").classList.remove("hidden");
+		};
+
+		window.eliminarItem = async (coleccion, itemId) => {
+			const confirmar = confirm("¿Seguro que deseas eliminar este elemento?");
+			if (!confirmar) return;
+
+			await deleteDoc(doc(db, "users", currentUser.uid, coleccion, itemId));
+			await cargarItems(coleccion, `cont-${coleccion}`, obtenerRenderizador(coleccion));
+			alert("Elemento eliminado correctamente.");
+		};
+
+		document.getElementById("btn-guardar-item").onclick = async () => {
+			const cfg = obtenerConfiguracion(tipoItemActual);
+			const campo1 = document.getElementById("item-campo1").value.trim();
+			const campo2 = document.getElementById("item-campo2").value.trim();
+			const inicio = document.getElementById("item-inicio").value;
+			const fin = document.getElementById("item-fin").value;
+			const descripcion = document.getElementById("item-desc").value.trim();
+
+			if (!campo1 || !campo2) {
+				alert("Completa los campos principales.");
+				return;
+			}
+
+			const payload = {
+				tipo: tipoItemActual,
+				campo1,
+				campo2,
+				descripcion
+			};
+
+			if (cfg.usaFechas) {
+				payload.inicio = inicio || "";
+				payload.fin = fin || "";
+			}
+
+			if (itemEditandoId) {
+				await updateDoc(
+					doc(db, "users", currentUser.uid, cfg.coleccion, itemEditandoId),
+					payload
+				);
+			} else {
+				payload.creadoEn = serverTimestamp();
+				await addDoc(collection(db, "users", currentUser.uid, cfg.coleccion), payload);
+			}
+
+			cerrarModalItem();
+			await cargarItems(cfg.coleccion, `cont-${cfg.coleccion}`, obtenerRenderizador(cfg.coleccion));
+			alert(itemEditandoId ? `${tipoItemActual} actualizado correctamente.` : `${tipoItemActual} guardado correctamente.`);
+		};
+
+		document.getElementById("input-cv").onchange = async (e) => {
+			const file = e.target.files[0];
+			if (file) {
+				await updateDoc(userRef, { cvNombre: file.name, cvCargado: true });
+				alert(`CV "${file.name}" cargado. Procesando Match IA.`);
+				location.reload();
+			}
+		};
+	</script>
+</body>
+
+</html>

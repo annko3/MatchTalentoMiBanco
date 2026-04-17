@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Publicar Empleo | Mibanco</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<script src="/js/tailwind.js"></script>
+</head>
+
+<body class="bg-slate-50 flex min-h-screen">
+
+	<!-- SIDEBAR-->
+	<div id="sidebar-placeholder"></div>
+
+	<main class="ml-72 flex-1 p-10">
+		<div class="max-w-4xl mx-auto">
+
+			<div class="flex items-center justify-between mb-8">
+				<h1 class="text-3xl font-bold text-gray-800 italic">Nueva Vacante</h1>
+				<a href="vacantes.html" class="text-gray-400 hover:text-mi-verde">
+					<i class='bx bx-arrow-back'></i> Volver
+				</a>
+			</div>
+
+			<form id="form-vacante" class="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 grid grid-cols-2 gap-6">
+
+				<div class="col-span-2">
+					<label class="block text-sm font-bold text-gray-700 mb-2 italic">
+						Título del puesto *
+					</label>
+					<input type="text" id="titulo"
+						class="w-full bg-gray-50 border-none p-4 rounded-2xl focus:ring-2 focus:ring-mi-verde outline-none"
+						placeholder="Ej. Analista de Créditos Junior" required>
+				</div>
+
+				<div>
+					<label class="block text-sm font-bold text-gray-700 mb-2 italic">
+						Modalidad *
+					</label>
+					<select id="modalidad" class="w-full bg-gray-50 border-none p-4 rounded-2xl outline-none">
+						<option value="Presencial">Presencial</option>
+						<option value="Remoto">Remoto</option>
+						<option value="Híbrido">Híbrido</option>
+					</select>
+				</div>
+
+				<div class="col-span-2 grid grid-cols-2 gap-6">
+					<div>
+						<label class="block text-sm font-bold text-gray-700 mb-2 italic">
+							Distrito (presencial/híbrido)
+						</label>
+						<select id="distrito" class="w-full bg-gray-50 border-none p-4 rounded-2xl outline-none">
+							<option value="Lima">Cercado de Lima</option>
+							<option value="Miraflores">Miraflores</option>
+							<option value="San Isidro">San Isidro</option>
+							<option value="Los Olivos">Santiago de Surco</option>
+							<option value="San Juan de Lurigancho">La Victoria</option>
+						</select>
+					</div>
+
+					<div>
+						<label class="block text-sm font-bold text-gray-700 mb-2 italic">
+							Experiencia requerida (meses)
+						</label>
+						<input type="number" id="experiencia" class="w-full bg-gray-50 border-none p-4 rounded-2xl outline-none"
+							placeholder="Ej. 6" value="0">
+					</div>
+				</div>
+
+				<div class="grid grid-cols-2 gap-6">
+					<div>
+						<label class="block text-sm font-bold text-gray-700 mb-2 italic">Fecha de inicio *</label>
+						<input type="date" id="fechaInicio"
+							class="w-full bg-gray-50 border-none p-4 rounded-2xl focus:ring-2 focus:ring-mi-verde outline-none"
+							required>
+					</div>
+					<div>
+						<label class="block text-sm font-bold text-gray-700 mb-2 italic">Fecha de cierre *</label>
+						<input type="date" id="fechaFin"
+							class="w-full bg-gray-50 border-none p-4 rounded-2xl focus:ring-2 focus:ring-mi-verde outline-none"
+							required>
+					</div>
+				</div>
+
+				<div class="col-span-2">
+					<label class="block text-sm font-bold text-gray-700 mb-2 italic">
+						Descripción detallada
+					</label>
+					<textarea id="descripcion" class="w-full bg-gray-50 border-none p-4 rounded-2xl outline-none h-32"
+						placeholder="Describe las responsabilidades..."></textarea>
+				</div>
+
+				<div class="col-span-2">
+					<label class="block text-sm font-bold text-gray-700 mb-2 italic">
+						Requisitos (separados por comas)
+					</label>
+					<input type="text" id="requisitos" class="w-full bg-gray-50 border-none p-4 rounded-2xl outline-none"
+						placeholder="Excel, Atención al cliente, Contabilidad">
+				</div>
+
+				<button type="submit"
+					class="col-span-2 bg-mi-verde text-white py-4 rounded-2xl font-bold text-lg shadow-lg hover:bg-green-700 transition">
+					Publicar ahora en Mibanco
+				</button>
+
+			</form>
+		</div>
+	</main>
+
+	<script type="module">
+		import { cargarSidebarAdmin } from '../js/main.js';
+		import { auth, db } from '../assets/firebase/config.js';
+		import { doc, getDoc, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+		import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+		/* sidebar */
+		await cargarSidebarAdmin();
+
+		auth.onAuthStateChanged(async (user) => {
+			if (user) {
+				const snap = await getDoc(doc(db, "users", user.uid));
+
+				if (snap.exists()) {
+					const d = snap.data();
+
+					document.getElementById('admin-nombre-side').innerText = d.nombres || "Admin";
+					document.getElementById('admin-puesto-side').innerText =
+						`${d.puesto || 'Puesto'} (${d.codigo || '000'})`;
+
+					if (d.fotoUrl) {
+						document.getElementById('admin-foto-side').src = d.fotoUrl;
+					}
+				}
+
+				document.getElementById('btn-logout')
+					.addEventListener('click', () => signOut(auth));
+
+			} else {
+				window.location.href = '../index.html';
+			}
+		});
+
+		/* CREAR VACANTE */
+		document.getElementById('form-vacante')
+			.addEventListener('submit', async (e) => {
+
+				e.preventDefault();
+
+				// Dentro del evento submit
+				const datos = {
+					titulo: document.getElementById('titulo').value,
+					modalidad: document.getElementById('modalidad').value,
+					distrito: document.getElementById('distrito').value, // Nuevo campo
+					experiencia: parseInt(document.getElementById('experiencia').value), // Nuevo campo
+					descripcion: document.getElementById('descripcion').value,
+					requisitos: document.getElementById('requisitos').value.split(','),
+					fechaInicio: Timestamp.fromDate(new Date(document.getElementById('fechaInicio').value + "T00:00:00")),
+					fechaFin: Timestamp.fromDate(new Date(document.getElementById('fechaFin').value + "T23:59:59")),
+					estado: "abierta",
+					fechaPublicacion: Timestamp.now()
+				};
+
+				try {
+					await addDoc(collection(db, "vacantes"), datos);
+					alert("¡Vacante publicada! Ya es visible para las candidatas.");
+					window.location.href = "vacantes.html";
+				} catch (error) {
+					console.error("Error al guardar:", error);
+				}
+			});
+	</script>
+
+</body>
+
+</html>

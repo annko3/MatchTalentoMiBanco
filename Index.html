@@ -14,44 +14,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <!--Navbar-->
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-20 items-center">
 
-          <div class="flex-shrink-0 flex items-center">
-            <img src="./img/logo.png" alt="Mibanco" class="h-10 md:h-12 w-auto">
-          </div>
-
-          <div class="hidden lg:flex items-center space-x-4">
-            <a href="./userRegistration.html"
-              class="bg-mi-naranja text-white px-8 py-2 rounded-full font-bold shadow-md hover:bg-orange-600 transition">
-              Ingresar
-            </a>
-            <a href="#" class="bg-mi-verde text-white px-6 py-2 rounded-full font-bold hover:bg-green-800 transition">
-              Crear cuenta
-            </a>
-          </div>
-
-          <div class="lg:hidden flex items-center">
-            <button id="mobile-menu-button" class="text-mi-verde focus:outline-none">
-              <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 p-4 space-y-4">
-        <a href="./userRegistration.html"
-          class="block w-full bg-mi-naranja text-white text-center py-3 rounded-full font-bold">
-          Ingresar
-        </a>
-        <a href="#" class="block w-full bg-mi-verde text-white text-center py-3 rounded-full font-bold">
-          Crear cuenta
-        </a>
-      </div>
-    </nav>
+    <div id="navbar-placeholder"></div>
 
     <!--Bienvenida y carrusel-->
 
@@ -90,7 +54,7 @@
 
     <!--Linea amarilla y galería con historia-->
 
-    <div class="h-9 bg-mi-amarillo w-full shadow-inner"></div>
+    <div id="panel" class="h-9 bg-mi-amarillo w-full shadow-inner"></div>
 
     <section class="bg-mi-verde py-20 px-6 overflow-hidden">
       <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
@@ -155,10 +119,10 @@
             class="w-[320px] h-[320px] md:w-[450px] md:h-[450px] bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex flex-col justify-center items-center text-center p-12 text-white shadow-2xl">
             <h2 class="text-3xl font-playful mb-6 uppercase">MATCH TALENTO <br> MIBANCO</h2>
             <p class="text-sm leading-relaxed opacity-90">
-              En Mibanco albergamos más de 10k corazones verdes comprometidos con transformar la 
+              En Mibanco albergamos más de 10k corazones verdes comprometidos con transformar la
               vida de miles de emprendedores.
-              Hoy, tenemos un nuevo objetivo: sumar a más mujeres a nuestra fuerza laboral. 
-              Así nace Match Talento Mibanco, un espacio para encontrarte y construir juntos 
+              Hoy, tenemos un nuevo objetivo: sumar a más mujeres a nuestra fuerza laboral.
+              Así nace Match Talento Mibanco, un espacio para encontrarte y construir juntos
               tu propia historia de progreso.
             </p>
             <div class="mt-8 w-12 h-1 bg-mi-amarillo rounded-full"></div>
@@ -168,11 +132,11 @@
       </div>
     </section>
 
-    <!--Cards empleo y linea blanca-->
+    <!--Cards empleo-->
 
     <div class="h-9 bg-white w-full shadow-inner"></div>
 
-    <section class="bg-mi-verde py-24 px-6 border-t border-white/5">
+    <section id="cards" class="bg-mi-verde py-24 px-6 border-t border-white/5">
       <div class="max-w-7xl mx-auto text-center">
 
         <h2 class="text-mi-amarillo text-3xl md:text-5xl font-serif mb-4 uppercase tracking-tight">
@@ -266,10 +230,10 @@
           <button
             class="group relative overflow-hidden h-14 px-12 rounded-full bg-mi-amarillo text-gray-600 border-none cursor-pointer shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl">
 
-            <span
+            <a href="./empleos.html"
               class="relative z-10 font-bold uppercase text-sm tracking-widest transition-colors duration-300 group-hover:text-white">
               Ver Vacantes
-            </span>
+            </a>
 
             <div
               class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-mi-amarillo to-mi-naranja origin-left scale-x-0 transition-transform duration-[475ms] ease-[cubic-bezier(0.475,0.42,0,0.99)] group-hover:scale-x-100">
@@ -287,6 +251,7 @@
   </main>
 
   <script src="./js/inicio.js" defer></script>
+  <script type="module" src="./js/main.js"></script>
 </body>
 
 </html>
