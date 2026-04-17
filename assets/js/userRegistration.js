@@ -12,13 +12,13 @@ import {
   getDownloadURL,
   createUserWithEmailAndPassword,
   signInWithPopup,
-  updateProfile
+  updateProfile,
 } from "../firebase/config.js";
 
 let emailTemp = "";
 let formaciones = [];
-let archivosSeleccionados = []; // Archivos multimedia actuales
-let archivosTemporales = []; // ← DECLARAR ESTA VARIABLE
+let archivosTemporales = [];
+let experiencias = [];
 
 // Función para mostrar mensajes
 function mostrarMensaje(titulo, mensaje, tipo = "success") {
@@ -96,7 +96,7 @@ window.validarYCambiarAPaso3 = function () {
     return;
   }
 
-   if (!departamento) {
+  if (!departamento) {
     mostrarMensaje("Error", "Selecciona un departamento", "error");
     return;
   }
@@ -108,7 +108,7 @@ window.validarYCambiarAPaso3 = function () {
 
   document.getElementById("paso2").classList.add("d-none");
   document.getElementById("paso3").classList.remove("d-none");
-}
+};
 
 window.validarYCambiarAPaso4 = function () {
   const birthDate = document.getElementById("inputBirthDate").value;
@@ -125,10 +125,10 @@ window.validarYCambiarAPaso4 = function () {
   const today = new Date();
   let age = today.getFullYear() - birthDateObj.getFullYear();
   const monthDiff = today.getMonth() - birthDateObj.getMonth();
-  if (monthDiff < 0   || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
     age--;
   }
-  
+
   if (age < 18) {
     mostrarMensaje("Error", "Debes ser mayor de 18 años", "error");
     return;
@@ -198,21 +198,20 @@ window.añadirFormacion = function () {
     return;
   }
 
-  // ✅ Crear nueva formación con ID único
+  const multimediaTemp = [...archivosTemporales];
+
   const nuevaFormacion = {
-    id: Date.now(), // ID único para identificar cada formación
+    id: Date.now(),
     institucion: institucionEducativa,
     titulo: tituloObtenido,
     estado: estadoFormacion,
     desde: { mes: mesInicio, año: anioInicio },
     hasta: { mes: mesFin, año: anioFin },
-    multimedia: [...archivosTemporales] // Copiar archivos temporales
+    multimedia: multimediaTemp,
   };
 
-  // ✅ Solo un push
   formaciones.push(nuevaFormacion);
 
-  // Limpiar formulario
   document.getElementById("inputInstitution").value = "";
   document.getElementById("inputDegree").value = "";
   document.getElementById("inputMesInicio").value = "";
@@ -221,18 +220,23 @@ window.añadirFormacion = function () {
   document.getElementById("inputAnioFin").value = "";
   document.getElementById("estadoCursando").checked = true;
 
-  // Limpiar archivos temporales
   archivosTemporales = [];
   mostrarListaArchivos();
-  
-  // Mostrar formaciones en paso 5
   mostrarFormacionesEnPaso5();
 
-  // Cambiar al paso 5
   document.getElementById("paso4").classList.add("d-none");
   document.getElementById("paso5").classList.remove("d-none");
 
   mostrarMensaje("Éxito", "Formación añadida correctamente", "success");
+};
+
+window.validarYCambiarAPaso6 = function() {
+  if (formaciones.length === 0) {
+    mostrarMensaje("Error", "Debes agregar al menos una formación académica", "error");
+    return;
+  }
+  document.getElementById("paso5").classList.add("d-none");
+  document.getElementById("paso6").classList.remove("d-none");
 };
 
 function mostrarFormacionesEnPaso5() {
@@ -258,7 +262,6 @@ function mostrarFormacionesEnPaso5() {
           🗑️
         </button>
       </div>
-
       ${form.multimedia && form.multimedia.length > 0 ? `
         <div class="mt-3">
           <div class="row g-2">
@@ -266,100 +269,91 @@ function mostrarFormacionesEnPaso5() {
               <div class="col-auto">
                 <div class="border rounded-2 p-1 text-center" style="width: 70px;">
                   <img src="${archivo.miniatura}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
-                  <div class="small text-muted" style="font-size: 10px;">${archivo.nombre.substring(0, 8)}${archivo.nombre.length > 8 ? '...' : ''}</div>
+                  <div class="small text-muted" style="font-size: 10px;">${archivo.nombre.substring(0, 8)}${archivo.nombre.length > 8 ? "..." : ""}</div>
                 </div>
               </div>
-            `).join('')}
+            `).join("")}
           </div>
         </div>
-      ` : ''}
+      ` : ""}
     </div>
-  `).join('');
+  `).join("");
 }
 
-window.eliminarFormacion = function(id) {
-  formaciones = formaciones.filter(form => form.id !== id);
+window.eliminarFormacion = function (id) {
+  formaciones = formaciones.filter((form) => form.id !== id);
   mostrarFormacionesEnPaso5();
   mostrarMensaje("Info", "Formación eliminada", "success");
 };
 
-window.volverAFormulario = function() {
+window.volverAFormulario = function () {
   archivosTemporales = [];
   mostrarListaArchivos();
   document.getElementById("paso5").classList.add("d-none");
   document.getElementById("paso4").classList.remove("d-none");
 };
 
-window.finalizarRegistro = function() {
-  if (formaciones.length === 0) {
-    mostrarMensaje("Error", "Agrega al menos una formación", "error");
-    return;
-  }
-  window.registrarUsuario();
-};
-
 // ========== MULTIMEDIA ==========
-const inputArchivos = document.getElementById('inputArchivos');
-const btnSeleccionar = document.getElementById('btnSeleccionarArchivos');
-const listaArchivos = document.getElementById('listaArchivos');
+const inputArchivos = document.getElementById("inputArchivos");
+const btnSeleccionar = document.getElementById("btnSeleccionarArchivos");
+const listaArchivos = document.getElementById("listaArchivos");
 
-btnSeleccionar?.addEventListener('click', () => {
+btnSeleccionar?.addEventListener("click", () => {
   inputArchivos.click();
 });
 
-inputArchivos?.addEventListener('change', (e) => {
+inputArchivos?.addEventListener("change", (e) => {
   agregarArchivos(e.target.files);
-  inputArchivos.value = '';
+  inputArchivos.value = "";
 });
 
 function obtenerMiniatura(file) {
-  if (file.type.startsWith('image/')) {
+  if (file.type.startsWith("image/")) {
     return URL.createObjectURL(file);
-  } else if (file.type === 'application/pdf') {
-    return 'https://cdn-icons-png.flaticon.com/512/337/337946.png';
-  } else if (file.type.startsWith('video/')) {
-    return 'https://cdn-icons-png.flaticon.com/512/564/564327.png';
+  } else if (file.type === "application/pdf") {
+    return "https://cdn-icons-png.flaticon.com/512/337/337946.png";
+  } else if (file.type.startsWith("video/")) {
+    return "https://cdn-icons-png.flaticon.com/512/564/564327.png";
   } else {
-    return 'https://cdn-icons-png.flaticon.com/512/136/136540.png';
+    return "https://cdn-icons-png.flaticon.com/512/136/136540.png";
   }
 }
 
 function agregarArchivos(files) {
   const maxSize = 10 * 1024 * 1024;
-  const formatosPermitidos = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf', 'video/mp4'];
- 
+  const formatosPermitidos = ["image/jpeg", "image/png", "image/jpg", "application/pdf", "video/mp4"];
+
   for (let file of files) {
     if (file.size > maxSize) {
-      mostrarMensaje('Error', `El archivo ${file.name} excede 10MB`, 'error');
+      mostrarMensaje("Error", `El archivo ${file.name} excede 10MB`, "error");
       continue;
     }
-    
+
     if (!formatosPermitidos.includes(file.type)) {
-      mostrarMensaje('Error', `Formato no permitido: ${file.name}`, 'error');
+      mostrarMensaje("Error", `Formato no permitido: ${file.name}`, "error");
       continue;
     }
-    
-    // ✅ Usar archivosTemporales, NO archivosSeleccionados
+
     archivosTemporales.push({
       file: file,
       nombre: file.name,
       tipo: file.type,
       tamaño: file.size,
-      miniatura: obtenerMiniatura(file)
+      miniatura: obtenerMiniatura(file),
     });
   }
-  
+
   mostrarListaArchivos();
 }
 
 function mostrarListaArchivos() {
   if (!listaArchivos) return;
-  
+
   if (archivosTemporales.length === 0) {
-    listaArchivos.innerHTML = '';
+    listaArchivos.innerHTML = "";
     return;
   }
-  
+
   listaArchivos.innerHTML = `
     <div class="border rounded-3 p-3" style="background-color: #f8f9fa;">
       <div class="fw-bold mb-2">Archivos para esta formación (${archivosTemporales.length})</div>
@@ -369,56 +363,178 @@ function mostrarListaArchivos() {
             <div class="border rounded-2 p-2 text-center position-relative">
               <button class="btn btn-sm btn-link text-danger position-absolute top-0 end-0 p-0" onclick="eliminarArchivoTemp(${index})" style="font-size: 12px;">✕</button>
               <img src="${archivo.miniatura}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
-              <div class="small text-muted mt-1">${archivo.nombre.substring(0, 10)}${archivo.nombre.length > 10 ? '...' : ''}</div>
+              <div class="small text-muted mt-1">${archivo.nombre.substring(0, 10)}${archivo.nombre.length > 10 ? "..." : ""}</div>
             </div>
           </div>
-        `).join('')}
+        `).join("")}
       </div>
     </div>
   `;
 }
 
-// ✅ Función para eliminar archivo temporal
-window.eliminarArchivoTemp = function(index) {
+window.eliminarArchivoTemp = function (index) {
   archivosTemporales.splice(index, 1);
   mostrarListaArchivos();
 };
 
 async function subirTodosLosArchivos(userId) {
   const todasLasUrls = [];
-  
+
   for (let formacion of formaciones) {
     const urlsFormacion = [];
-    for (let item of formacion.multimedia) {
-      try {
-        const file = item.file;
-        const extension = file.name.split('.').pop();
-        const nombreArchivo = `${Date.now()}_${Math.random().toString(36).substring(7)}.${extension}`;
-        const path = `usuarios/${userId}/formaciones/${formacion.id}/${nombreArchivo}`;
-        
-        const storageRef = ref(storage, path);
-        await uploadBytes(storageRef, file);
-        const url = await getDownloadURL(storageRef);
-        
-        urlsFormacion.push({
-          nombre: item.nombre,
-          url: url,
-          tipo: item.tipo,
-          tamaño: item.tamaño,
-          fecha: new Date()
-        });
-      } catch (error) {
-        console.error('Error al subir archivo:', error);
+
+    if (formacion.multimedia && formacion.multimedia.length > 0) {
+      for (let item of formacion.multimedia) {
+        try {
+          if (!item.file) continue;
+          
+          const file = item.file;
+          const extension = file.name.split(".").pop();
+          const nombreArchivo = `${Date.now()}_${Math.random().toString(36).substring(7)}.${extension}`;
+          const path = `usuarios/${userId}/formaciones/${formacion.id}/${nombreArchivo}`;
+
+          const storageRef = ref(storage, path);
+          await uploadBytes(storageRef, file);
+          const url = await getDownloadURL(storageRef);
+
+          urlsFormacion.push({
+            nombre: item.nombre,
+            url: url,
+            tipo: item.tipo,
+            tamaño: item.tamaño,
+            fecha: new Date(),
+          });
+        } catch (error) {
+          console.error("Error al subir archivo:", error);
+        }
       }
     }
     todasLasUrls.push({
       formacionId: formacion.id,
-      archivos: urlsFormacion
+      archivos: urlsFormacion,
     });
   }
-  
+
   return todasLasUrls;
 }
+
+// ========== EXPERIENCIA ==========
+window.saltarExperiencia = function () {
+  if (confirm("¿Estás seguro de que buscas tu primer empleo?")) {
+    window.registrarUsuario();
+  }
+};
+
+window.añadirExperiencia = function () {
+  const cargo = document.getElementById("inputCargo").value;
+  const empresa = document.getElementById("inputEmpresa").value;
+  const mesInicio = document.getElementById("inputExpMesInicio").value;
+  const anioInicio = document.getElementById("inputExpAnioInicio").value;
+  const mesFin = document.getElementById("inputExpMesFin").value;
+  const anioFin = document.getElementById("inputExpAnioFin").value;
+  const descripcion = document.getElementById("inputExpDescripcion").value;
+
+  if (!cargo) {
+    mostrarMensaje("Error", "Ingresa el cargo", "error");
+    return;
+  }
+
+  if (!empresa) {
+    mostrarMensaje("Error", "Ingresa el nombre de la empresa", "error");
+    return;
+  }
+
+  if (!mesInicio || !anioInicio) {
+    mostrarMensaje("Error", "Selecciona la fecha de inicio", "error");
+    return;
+  }
+
+  if (!mesFin || !anioFin) {
+    mostrarMensaje("Error", "Selecciona la fecha de fin", "error");
+    return;
+  }
+
+  if (anioFin < anioInicio || (anioFin == anioInicio && mesFin < mesInicio)) {
+    mostrarMensaje("Error", "La fecha de fin no puede ser menor a la fecha de inicio", "error");
+    return;
+  }
+
+  const nuevaExperiencia = {
+    id: Date.now(),
+    cargo: cargo,
+    empresa: empresa,
+    desde: { mes: mesInicio, año: anioInicio },
+    hasta: { mes: mesFin, año: anioFin },
+    descripcion: descripcion || "",
+  };
+
+  experiencias.push(nuevaExperiencia);
+
+  document.getElementById("inputCargo").value = "";
+  document.getElementById("inputEmpresa").value = "";
+  document.getElementById("inputExpMesInicio").value = "";
+  document.getElementById("inputExpAnioInicio").value = "";
+  document.getElementById("inputExpMesFin").value = "";
+  document.getElementById("inputExpAnioFin").value = "";
+  document.getElementById("inputExpDescripcion").value = "";
+
+  mostrarExperienciasEnPaso7();
+
+  document.getElementById("paso6").classList.add("d-none");
+  document.getElementById("paso7").classList.remove("d-none");
+
+  mostrarMensaje("Éxito", "Experiencia añadida correctamente", "success");
+};
+
+function mostrarExperienciasEnPaso7() {
+  const container = document.getElementById("listaExperienciasContainer");
+  if (!container) return;
+
+  if (experiencias.length === 0) {
+    container.innerHTML = '<p class="text-muted text-center">No hay experiencias añadidas</p>';
+    return;
+  }
+
+  container.innerHTML = experiencias.map((exp) => `
+    <div class="border rounded-3 p-3 mb-3" style="background-color: #e9ecef;">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="fw-bold">${exp.cargo}</div>
+          <div class="text-muted">${exp.empresa}</div>
+          <div class="small text-muted mt-1">
+            ${getNombreMes(exp.desde.mes)}/${exp.desde.año} - ${getNombreMes(exp.hasta.mes)}/${exp.hasta.año}
+          </div>
+          ${exp.descripcion ? `<div class="small mt-2">${exp.descripcion.substring(0, 100)}${exp.descripcion.length > 100 ? "..." : ""}</div>` : ""}
+        </div>
+        <button class="btn btn-sm btn-link text-danger" onclick="eliminarExperiencia(${exp.id})">
+          🗑️
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
+
+window.eliminarExperiencia = function (id) {
+  if (confirm("¿Eliminar esta experiencia laboral?")) {
+    experiencias = experiencias.filter((exp) => exp.id !== id);
+    mostrarExperienciasEnPaso7();
+    mostrarMensaje("Info", "Experiencia eliminada", "success");
+  }
+};
+
+window.volverAFormularioExperiencia = function () {
+  document.getElementById("paso7").classList.add("d-none");
+  document.getElementById("paso6").classList.remove("d-none");
+};
+
+// REGISTRO FINAL 
+window.finalizarRegistro = function () {
+  if (formaciones.length === 0) {
+    mostrarMensaje("Error", "Agrega al menos una formación académica", "error");
+    return;
+  }
+  window.registrarUsuario();
+};
 
 window.registrarUsuario = async function () {
   const nombres = document.getElementById("inputName").value;
@@ -426,8 +542,8 @@ window.registrarUsuario = async function () {
   const email = document.getElementById("inputEmail2").value;
   const password = document.getElementById("inputPassword").value;
   const confirmPassword = document.getElementById("inputConfirmPassword").value;
-  const departamento = document.getElementById('selectDepartamento')?.value;
-  const distrito = document.getElementById('selectDistrito')?.value;
+  const departamento = document.getElementById("selectDepartamento")?.value;
+  const distrito = document.getElementById("selectDistrito")?.value;
   const birthDate = document.getElementById("inputBirthDate").value;
   const idType = document.getElementById("inputIdType").value;
   const idNumber = document.getElementById("inputIdNumber").value;
@@ -448,24 +564,29 @@ window.registrarUsuario = async function () {
     return;
   }
 
-  try {
-    mostrarMensaje("Procesando", "Creando cuenta...", "success");
+  mostrarMensaje("Procesando", "Creando cuenta...", "success");
 
+  try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
     await updateProfile(user, { displayName: `${nombres} ${apellidos}` });
 
-    const archivosSubidos = await subirTodosLosArchivos(user.uid);
+    let archivosSubidos = [];
+    try {
+      archivosSubidos = await subirTodosLosArchivos(user.uid);
+    } catch (error) {
+      console.error("Error al subir archivos:", error);
+    }
 
-    const formacionesParaGuardar = formaciones.map(form => ({
+    const formacionesParaGuardar = formaciones.map((form) => ({
       id: form.id,
       institucion: form.institucion,
       titulo: form.titulo,
       estado: form.estado,
       desde: form.desde,
       hasta: form.hasta,
-      multimedia: archivosSubidos.find(f => f.formacionId === form.id)?.archivos || []
+      multimedia: archivosSubidos.find((f) => f.formacionId === form.id)?.archivos || [],
     }));
 
     await setDoc(doc(db, "usuarios", user.uid), {
@@ -479,16 +600,17 @@ window.registrarUsuario = async function () {
       departamento: departamento,
       distrito: distrito,
       formaciones: formacionesParaGuardar,
+      experiencias: experiencias,
       fechaRegistro: new Date(),
       rol: "usuario",
-      activo: true
+      activo: true,
     });
 
     mostrarMensaje("Éxito", "¡Usuario registrado correctamente!", "success");
     limpiarFormulario();
 
     setTimeout(() => {
-      alert("Usuario registrado");
+      alert("Usuario registrado exitosamente");
     }, 2000);
 
   } catch (error) {
@@ -496,13 +618,13 @@ window.registrarUsuario = async function () {
 
     let mensajeError = "Error al registrar usuario";
     switch (error.code) {
-      case 'auth/email-already-in-use':
+      case "auth/email-already-in-use":
         mensajeError = "Este correo electrónico ya está registrado";
         break;
-      case 'auth/invalid-email':
+      case "auth/invalid-email":
         mensajeError = "El correo electrónico no es válido";
         break;
-      case 'auth/weak-password':
+      case "auth/weak-password":
         mensajeError = "La contraseña es demasiado débil (mínimo 6 caracteres)";
         break;
       default:
@@ -545,61 +667,82 @@ document.getElementById("btn-google")?.addEventListener("click", async () => {
 
 function limpiarFormulario() {
   const inputs = ["inputName", "inputSurname", "inputEmail", "inputEmail2", "inputPassword", "inputConfirmPassword", "inputBirthDate", "inputIdNumber", "inputPhone"];
-  inputs.forEach(id => {
+  inputs.forEach((id) => {
     const element = document.getElementById(id);
     if (element) element.value = "";
   });
   emailTemp = "";
-  archivosSeleccionados = [];
   archivosTemporales = [];
   formaciones = [];
+  experiencias = [];
   mostrarListaArchivos();
   mostrarFormacionesEnPaso5();
+  mostrarExperienciasEnPaso7();
+}
+
+function getNombreMes(numeroMes) {
+  const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+  return meses[parseInt(numeroMes) - 1];
 }
 
 // Datos de ubicación
 const distritosPorDepartamento = {
-  lima: ['Lima', 'Miraflores', 'San Isidro', 'San Borja', 'Surco', 'La Molina', 'Barranco'],
-  arequipa: ['Arequipa', 'Cayma', 'Yanahuara', 'Sachaca', 'Cerro Colorado', 'Socabaya'],
-  cusco: ['Cusco', 'San Sebastián', 'San Jerónimo', 'Santiago', 'Wanchaq'],
-  piura: ['Piura', 'Castilla', 'Catacaos', 'Veintiséis de Octubre'],
-  lambayeque: ['Chiclayo', 'José Leonardo Ortiz', 'La Victoria', 'Pimentel'],
-  la_libertad: ['Trujillo', 'Víctor Larco', 'El Porvenir', 'Florencia de Mora'],
-  junin: ['Huancayo', 'El Tambo', 'Chilca', 'San Carlos'],
-  ancash: ['Huaraz', 'Independencia', 'Centenario', 'Vichay'],
-  cajamarca: ['Cajamarca', 'Baños del Inca', 'Los Baños', 'Porcón'],
-  ica: ['Ica', 'Parcona', 'Los Aquijes', 'Subtanjalla']
+  lima: ["Lima", "Miraflores", "San Isidro", "San Borja", "Surco", "La Molina", "Barranco"],
+  arequipa: ["Arequipa", "Cayma", "Yanahuara", "Sachaca", "Cerro Colorado", "Socabaya"],
+  cusco: ["Cusco", "San Sebastián", "San Jerónimo", "Santiago", "Wanchaq"],
+  piura: ["Piura", "Castilla", "Catacaos", "Veintiséis de Octubre"],
+  lambayeque: ["Chiclayo", "José Leonardo Ortiz", "La Victoria", "Pimentel"],
+  la_libertad: ["Trujillo", "Víctor Larco", "El Porvenir", "Florencia de Mora"],
+  junin: ["Huancayo", "El Tambo", "Chilca", "San Carlos"],
+  ancash: ["Huaraz", "Independencia", "Centenario", "Vichay"],
+  cajamarca: ["Cajamarca", "Baños del Inca", "Los Baños", "Porcón"],
+  ica: ["Ica", "Parcona", "Los Aquijes", "Subtanjalla"],
 };
 
-document.getElementById('selectDepartamento')?.addEventListener('change', function() {
+document.getElementById("selectDepartamento")?.addEventListener("change", function () {
   const departamento = this.value;
-  const selectDistrito = document.getElementById('selectDistrito');
-
+  const selectDistrito = document.getElementById("selectDistrito");
   selectDistrito.innerHTML = '<option value="" disabled selected>Distrito</option>';
-
   if (departamento && distritosPorDepartamento[departamento]) {
-    distritosPorDepartamento[departamento].forEach(distrito => {
-      const option = document.createElement('option');
-      option.value = distrito.toLowerCase().replace(/ /g, '_');
+    distritosPorDepartamento[departamento].forEach((distrito) => {
+      const option = document.createElement("option");
+      option.value = distrito.toLowerCase().replace(/ /g, "_");
       option.textContent = distrito;
       selectDistrito.appendChild(option);
     });
   }
 });
 
-const departamentosPeru = [
-  'Amazonas', 'Áncash', 'Apurímac', 'Arequipa', 'Ayacucho', 'Cajamarca', 
-  'Callao', 'Cusco', 'Huancavelica', 'Huánuco', 'Ica', 'Junín', 
-  'La Libertad', 'Lambayeque', 'Lima', 'Loreto', 'Madre de Dios', 
-  'Moquegua', 'Pasco', 'Piura', 'Puno', 'San Martín', 'Tacna', 'Tumbes', 'Ucayali'
-];
+const departamentosPeru = ["Amazonas", "Áncash", "Apurímac", "Arequipa", "Ayacucho", "Cajamarca", "Callao", "Cusco", "Huancavelica", "Huánuco", "Ica", "Junín", "La Libertad", "Lambayeque", "Lima", "Loreto", "Madre de Dios", "Moquegua", "Pasco", "Piura", "Puno", "San Martín", "Tacna", "Tumbes", "Ucayali"];
 
-const selectDepartamento = document.getElementById('selectDepartamento');
+const selectDepartamento = document.getElementById("selectDepartamento");
 if (selectDepartamento) {
-  departamentosPeru.forEach(depto => {
-    const option = document.createElement('option');
-    option.value = depto.toLowerCase().replace(/ /g, '_');
+  departamentosPeru.forEach((depto) => {
+    const option = document.createElement("option");
+    option.value = depto.toLowerCase().replace(/ /g, "_");
     option.textContent = depto;
     selectDepartamento.appendChild(option);
   });
 }
+
+function llenarSelectoresAnios() {
+  const anioActual = new Date().getFullYear();
+  const anioInicio = 1980;
+  const selectores = ["inputExpAnioInicio", "inputExpAnioFin"];
+  selectores.forEach((selectorId) => {
+    const selector = document.getElementById(selectorId);
+    if (selector) {
+      selector.innerHTML = '<option value="" disabled selected>Año</option>';
+      for (let i = anioActual; i >= anioInicio; i--) {
+        const option = document.createElement("option");
+        option.value = i;
+        option.textContent = i;
+        selector.appendChild(option);
+      }
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  llenarSelectoresAnios();
+});
