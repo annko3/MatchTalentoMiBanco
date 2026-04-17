@@ -611,6 +611,7 @@ window.registrarUsuario = async function () {
 
     setTimeout(() => {
       alert("Usuario registrado exitosamente");
+      window.location.href = "login.html";
     }, 2000);
 
   } catch (error) {
