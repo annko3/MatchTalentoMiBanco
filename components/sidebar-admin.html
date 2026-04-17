@@ -1,0 +1,38 @@
+<aside class="w-72 bg-mi-verde text-white flex flex-col fixed h-full shadow-2xl">
+	<div class="p-8 text-center border-b border-white/20">
+		<div class="w-24 h-24 bg-white rounded-full mx-auto mb-4 overflow-hidden border-4 border-mi-amarillo">
+			<img id="admin-foto-side" src="" class="object-cover w-full h-full"
+				onerror="this.src='https://ui-avatars.com/api/?name=K+M&background=ffdf00&color=008f39'">
+		</div>
+		<h4 id="admin-nombre-side" class="font-bold text-lg italic">Cargando...</h4>
+		<p id="admin-puesto-side" class="text-xs opacity-80 mb-2 italic"></p>
+	</div>
+
+	<div class="p-6">
+		<p class="text-xs uppercase font-bold tracking-widest opacity-60 mb-6">General</p>
+		<nav class="space-y-4" id="nav-admin">
+			<a href="vacantes.html" id="link-vacantes"
+				class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 transition">
+				<i class='bx bxs-briefcase text-2xl'></i>
+				<span class="font-medium italic">Vacantes disponibles</span>
+			</a>
+			<a href="postulaciones.html" id="link-postulaciones"
+				class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 transition">
+				<i class='bx bxs-user-circle text-2xl'></i>
+				<span class="font-medium italic">Postulantes</span>
+			</a>
+			<a href="dashboard.html" id="link-progreso"
+				class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 transition">
+				<i class='bx bxs-bar-chart-alt-2 text-2xl'></i>
+				<span class="font-medium italic">Progreso</span>
+			</a>
+		</nav>
+	</div>
+
+	<div class="mt-auto p-6 border-t border-white/10 bg-black/5">
+		<button id="btn-logout"
+			class="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-mi-rojo/20 text-white font-bold hover:bg-mi-rojo transition">
+			<i class='bx bx-log-out-circle text-xl'></i> <span>Cerrar Sesión</span>
+		</button>
+	</div>
+</aside>

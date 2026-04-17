@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bolsa de Empleo | Mibanco</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="./js/tailwind.js"></script>
+</head>
+
+<body class="bg-gray-50 flex flex-col min-h-screen">
+  <div id="navbar-placeholder"></div>
+
+  <main class="flex-grow">
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+        <h2 class="text-xl font-bold text-gray-800 mb-6 italic">Filtrar empleos</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div>
+            <label class="block text-sm font-semibold text-gray-600 mb-2">Buscar</label>
+            <input type="text" id="filtro-busqueda" placeholder="Titulo o palabras clave..."
+              class="w-full px-4 py-2 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-mi-verde">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-600 mb-2">Distritos</label>
+            <select id="filtro-distrito" class="w-full p-2 border border-gray-200 rounded-xl outline-none">
+              <option value="Todos">Todos</option>
+              <option value="Lima">Lima</option>
+              <option value="Miraflores">Miraflores</option>
+              <option value="San Isidro">San Isidro</option>
+              <option value="Los Olivos">Los Olivos</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-600 mb-2">Modalidad</label>
+            <select id="filtro-modalidad" class="w-full p-2 border border-gray-200 rounded-xl outline-none">
+              <option value="Todas">Todas</option>
+              <option value="Presencial">Presencial</option>
+              <option value="Remoto">Remoto</option>
+              <option value="Hibrido">Hibrido</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-600 mb-2">Experiencia</label>
+            <select id="filtro-experiencia" class="w-full p-2 border border-gray-200 rounded-xl outline-none">
+              <option value="Cualquiera">Cualquiera</option>
+              <option value="Sin">Sin experiencia</option>
+              <option value="Con">Con experiencia</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <div id="contenedor-empleos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    </section>
+  </main>
+
+  <div id="modal-vacante" class="hidden fixed inset-0 z-[120] bg-black/60 backdrop-blur-sm p-4">
+    <div class="max-w-3xl mx-auto h-full flex items-center justify-center">
+      <div class="bg-white w-full rounded-3xl shadow-2xl overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+          <div>
+            <p id="modal-vacante-tag" class="text-[11px] font-black uppercase text-mi-naranja mb-1"></p>
+            <h3 id="modal-vacante-titulo" class="text-2xl font-bold text-gray-800 italic"></h3>
+          </div>
+          <button onclick="cerrarDetalleVacante()" class="text-gray-400 hover:text-gray-700 text-3xl leading-none">&times;</button>
+        </div>
+
+        <div class="p-6 md:p-8 max-h-[75vh] overflow-y-auto space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-gray-50 rounded-2xl p-4">
+              <p class="text-[11px] uppercase font-black text-gray-400">Modalidad</p>
+              <p id="modal-vacante-modalidad" class="font-bold text-gray-700 mt-1"></p>
+            </div>
+            <div class="bg-gray-50 rounded-2xl p-4">
+              <p class="text-[11px] uppercase font-black text-gray-400">Distrito</p>
+              <p id="modal-vacante-distrito" class="font-bold text-gray-700 mt-1"></p>
+            </div>
+            <div class="bg-gray-50 rounded-2xl p-4">
+              <p class="text-[11px] uppercase font-black text-gray-400">Experiencia</p>
+              <p id="modal-vacante-experiencia" class="font-bold text-gray-700 mt-1"></p>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-black uppercase text-gray-500 mb-2">Descripcion</h4>
+            <p id="modal-vacante-descripcion" class="text-gray-600 leading-relaxed"></p>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-black uppercase text-gray-500 mb-2">Requisitos</h4>
+            <ul id="modal-vacante-requisitos" class="space-y-2 text-sm text-gray-600 list-disc list-inside"></ul>
+          </div>
+
+          <div id="postulacion-estado" class="hidden rounded-2xl p-4 text-sm font-medium"></div>
+        </div>
+
+        <div class="px-6 py-5 border-t border-gray-100 flex flex-col sm:flex-row gap-3 justify-end">
+          <button onclick="cerrarDetalleVacante()" class="px-6 py-3 rounded-xl font-bold text-gray-500 hover:text-gray-700">
+            Cerrar
+          </button>
+          <button id="btn-confirmar-postulacion" class="bg-mi-verde text-white px-6 py-3 rounded-xl font-bold hover:bg-green-800 transition shadow-lg">
+            Confirmar postulacion
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script type="module">
+    import { db, auth } from './assets/firebase/config.js';
+    import {
+      collection,
+      getDocs,
+      query,
+      where,
+      doc,
+      getDoc,
+      addDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const contenedor = document.getElementById('contenedor-empleos');
+    const estadoPostulacion = document.getElementById('postulacion-estado');
+    const btnConfirmarPostulacion = document.getElementById('btn-confirmar-postulacion');
+    let vacantesOriginales = [];
+    let vacanteSeleccionada = null;
+
+    async function inicializarBolsa() {
+      const ahora = new Date();
+      const q = query(collection(db, "vacantes"), where("estado", "==", "abierta"));
+      const snap = await getDocs(q);
+
+      vacantesOriginales = snap.docs
+        .map(docSnap => ({ id: docSnap.id, ...docSnap.data() }))
+        .filter(v => {
+          const inicio = v.fechaInicio?.toDate();
+          const fin = v.fechaFin?.toDate();
+          return inicio && fin && ahora >= inicio && ahora <= fin;
+        });
+
+      renderizarVacantes(vacantesOriginales);
+      configurarEscuchadores();
+    }
+
+    function renderizarVacantes(lista) {
+      contenedor.innerHTML = '';
+      if (lista.length === 0) {
+        contenedor.innerHTML = '<p class="col-span-full text-center text-gray-400 py-20 italic">No se encontraron empleos con esos filtros.</p>';
+        return;
+      }
+
+      lista.forEach(v => {
+        contenedor.innerHTML += `
+          <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-mi-verde hover:shadow-xl transition flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-start mb-4">
+                <span class="bg-green-100 text-mi-verde text-[10px] font-black px-3 py-1 rounded-full uppercase italic">
+                  ${v.experiencia > 0 ? 'Con Exp.' : 'Primer Empleo'}
+                </span>
+                <span class="text-[10px] text-gray-400 font-bold uppercase italic">Cierre: ${v.fechaFin.toDate().toLocaleDateString()}</span>
+              </div>
+              <h3 class="text-xl font-bold text-gray-800 mb-2 capitalize">${v.titulo}</h3>
+              <p class="text-gray-600 text-sm mb-4 line-clamp-3">${v.descripcion}</p>
+              <div class="flex items-center text-xs text-gray-500 space-x-4 mb-6">
+                <span><i class="fas fa-map-marker-alt text-mi-naranja"></i> ${v.modalidad === 'Remoto' ? 'Remoto' : v.distrito}</span>
+                <span><i class="fas fa-briefcase text-mi-verde"></i> ${v.modalidad}</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button onclick="verDetalleVacante('${v.id}')" class="w-full border border-mi-verde text-mi-verde font-bold py-3 rounded-xl hover:bg-green-50 transition">
+                Ver detalle
+              </button>
+              <button onclick="intentarPostular('${v.id}')" class="w-full bg-mi-verde text-white font-bold py-3 rounded-xl hover:bg-green-800 transition shadow-lg">
+                Postular ahora
+              </button>
+            </div>
+          </div>`;
+      });
+    }
+
+    function configurarEscuchadores() {
+      ['filtro-busqueda', 'filtro-distrito', 'filtro-modalidad', 'filtro-experiencia'].forEach(id => {
+        document.getElementById(id).addEventListener('input', filtrarLocalmente);
+      });
+    }
+
+    function filtrarLocalmente() {
+      const busqueda = document.getElementById('filtro-busqueda').value.toLowerCase();
+      const distrito = document.getElementById('filtro-distrito').value;
+      const modalidad = document.getElementById('filtro-modalidad').value;
+      const experiencia = document.getElementById('filtro-experiencia').value;
+
+      const filtradas = vacantesOriginales.filter(v => {
+        const coincideBusqueda = v.titulo.toLowerCase().includes(busqueda) || v.descripcion.toLowerCase().includes(busqueda);
+        const coincideDistrito = distrito === 'Todos' || v.distrito === distrito;
+        const coincideModalidad = modalidad === 'Todas' || v.modalidad === modalidad;
+        const coincideExp = experiencia === 'Cualquiera' ||
+          (experiencia === 'Sin' && v.experiencia === 0) ||
+          (experiencia === 'Con' && v.experiencia > 0);
+
+        return coincideBusqueda && coincideDistrito && coincideModalidad && coincideExp;
+      });
+
+      renderizarVacantes(filtradas);
+    }
+
+    function abrirDetalleVacante(vacante) {
+      vacanteSeleccionada = vacante;
+      document.getElementById('modal-vacante-tag').innerText = vacante.experiencia > 0 ? 'Con experiencia' : 'Primer empleo';
+      document.getElementById('modal-vacante-titulo').innerText = vacante.titulo;
+      document.getElementById('modal-vacante-modalidad').innerText = vacante.modalidad;
+      document.getElementById('modal-vacante-distrito').innerText = vacante.modalidad === 'Remoto' ? 'Remoto' : (vacante.distrito || 'No especificado');
+      document.getElementById('modal-vacante-experiencia').innerText = vacante.experiencia > 0 ? `${vacante.experiencia} meses` : 'No requerida';
+      document.getElementById('modal-vacante-descripcion').innerText = vacante.descripcion || 'Sin descripcion.';
+      document.getElementById('modal-vacante-requisitos').innerHTML = (vacante.requisitos || [])
+        .map(req => `<li>${String(req).trim()}</li>`)
+        .join('') || '<li>Sin requisitos registrados.</li>';
+
+      estadoPostulacion.className = 'hidden rounded-2xl p-4 text-sm font-medium';
+      estadoPostulacion.innerText = '';
+      btnConfirmarPostulacion.disabled = false;
+      btnConfirmarPostulacion.innerText = 'Confirmar postulacion';
+      document.getElementById('modal-vacante').classList.remove('hidden');
+    }
+
+    window.verDetalleVacante = (idVacante) => {
+      const vacante = vacantesOriginales.find(v => v.id === idVacante);
+      if (vacante) abrirDetalleVacante(vacante);
+    };
+
+    window.intentarPostular = (idVacante) => {
+      const vacante = vacantesOriginales.find(v => v.id === idVacante);
+      if (vacante) abrirDetalleVacante(vacante);
+    };
+
+    window.cerrarDetalleVacante = () => {
+      document.getElementById('modal-vacante').classList.add('hidden');
+      vacanteSeleccionada = null;
+    };
+
+    btnConfirmarPostulacion.addEventListener('click', async () => {
+      if (!vacanteSeleccionada) return;
+      if (!auth.currentUser) {
+        alert('Debes iniciar sesion para postular.');
+        window.location.href = './login.html';
+        return;
+      }
+
+      btnConfirmarPostulacion.disabled = true;
+      btnConfirmarPostulacion.innerText = 'Postulando...';
+
+      try {
+        const user = auth.currentUser;
+        const existe = await yaPostulo(user.uid, vacanteSeleccionada.id);
+        if (existe) {
+          mostrarEstadoPostulacion('Ya te postulaste a esta vacante.', 'warning');
+          btnConfirmarPostulacion.disabled = false;
+          btnConfirmarPostulacion.innerText = 'Confirmar postulacion';
+          return;
+        }
+
+        const perfil = await construirPerfilPostulante(user.uid);
+        const resultadoMatch = await calcularMatch(vacanteSeleccionada, perfil);
+
+        await addDoc(collection(db, 'postulaciones'), {
+          idVacante: vacanteSeleccionada.id,
+          tituloVacante: vacanteSeleccionada.titulo,
+          idPostulante: user.uid,
+          nombre: perfil.nombre,
+          email: perfil.email,
+          telefono: perfil.telefono,
+          cvNombre: perfil.cvNombre,
+          cvUrl: perfil.cvUrl,
+          fechaPostulacion: serverTimestamp(),
+          estado: 'Postulada',
+          matchScores: resultadoMatch.matchScores,
+          resumenIA: resultadoMatch.resumenIA,
+          perfilResumen: perfil.resumenTexto,
+          requisitosSnapshot: vacanteSeleccionada.requisitos || []
+        });
+
+        mostrarEstadoPostulacion(`Postulacion enviada. Match estimado: ${resultadoMatch.matchScores.total}%`, 'success');
+        btnConfirmarPostulacion.innerText = 'Postulacion enviada';
+      } catch (error) {
+        console.error('Error al postular:', error);
+        mostrarEstadoPostulacion('Ocurrio un error al registrar la postulacion.', 'error');
+        btnConfirmarPostulacion.disabled = false;
+        btnConfirmarPostulacion.innerText = 'Confirmar postulacion';
+      }
+    });
+
+    async function yaPostulo(uid, idVacante) {
+      const q = query(collection(db, 'postulaciones'), where('idPostulante', '==', uid), where('idVacante', '==', idVacante));
+      const snap = await getDocs(q);
+      return !snap.empty;
+    }
+
+    async function construirPerfilPostulante(uid) {
+      const userSnap = await getDoc(doc(db, 'users', uid));
+      const userData = userSnap.exists() ? userSnap.data() : {};
+
+      const [experiencia, educacion, idiomas] = await Promise.all([
+        leerSubcoleccion(uid, 'experiencia'),
+        leerSubcoleccion(uid, 'educacion'),
+        leerSubcoleccion(uid, 'idiomas')
+      ]);
+
+      const nombreCompleto = [userData.nombres, userData.apellidos].filter(Boolean).join(' ') || userData.nombres || 'Candidata';
+      const resumenTexto = [
+        `Nombre: ${nombreCompleto}`,
+        `Distrito: ${userData.distrito || 'No especificado'}`,
+        `Telefono: ${userData.telefono || 'No especificado'}`,
+        `CV: ${userData.cvNombre || 'No cargado'}`,
+        `Experiencia: ${experiencia.length ? experiencia.map(x => `${x.campo1} en ${x.campo2}`).join('; ') : 'Sin registros'}`,
+        `Educacion: ${educacion.length ? educacion.map(x => `${x.campo1} - ${x.campo2}`).join('; ') : 'Sin registros'}`,
+        `Idiomas: ${idiomas.length ? idiomas.map(x => `${x.campo1} (${x.campo2})`).join('; ') : 'Sin registros'}`
+      ].join('\n');
+
+      return {
+        nombre: nombreCompleto,
+        email: userData.email || auth.currentUser?.email || '-',
+        telefono: userData.telefono || '-',
+        cvNombre: userData.cvNombre || '',
+        cvUrl: userData.cvUrl || '',
+        resumenTexto,
+        experiencia,
+        educacion,
+        idiomas
+      };
+    }
+
+    async function leerSubcoleccion(uid, nombreColeccion) {
+      const snap = await getDocs(collection(db, 'users', uid, nombreColeccion));
+      return snap.docs.map(docSnap => docSnap.data());
+    }
+
+    async function calcularMatch(vacante, perfil) {
+      const fallback = calcularMatchFallback(vacante, perfil);
+      const apiKey = obtenerGeminiApiKey();
+      if (!apiKey) return fallback;
+
+      const prompt = `
+Eres un asistente de reclutamiento. Evalua el match entre una candidata y una vacante.
+Devuelve SOLO JSON valido con esta forma:
+{
+  "matchScores": {
+    "exp": 0,
+    "edu": 0,
+    "idi": 0,
+    "total": 0
+  },
+  "resumenIA": "texto corto en espanol"
+}
+
+Vacante:
+- Titulo: ${vacante.titulo}
+- Modalidad: ${vacante.modalidad}
+- Distrito: ${vacante.distrito || 'No especificado'}
+- Experiencia requerida en meses: ${vacante.experiencia || 0}
+- Descripcion: ${vacante.descripcion || 'Sin descripcion'}
+- Requisitos: ${(vacante.requisitos || []).join(', ')}
+
+Perfil de la candidata:
+${perfil.resumenTexto}
+
+Reglas:
+- Usa enteros de 0 a 100.
+- "exp" evalua experiencia.
+- "edu" evalua educacion.
+- "idi" evalua idiomas y afinidad general del perfil.
+- "total" debe ser un promedio razonable.
+- El resumen debe ser breve y profesional.
+      `.trim();
+
+      try {
+        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-goog-api-key': apiKey
+          },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }]
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Gemini error ${response.status}`);
+        }
+
+        const data = await response.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const clean = text.replace(/```json|```/g, '').trim();
+        const parsed = JSON.parse(clean);
+        return parsed?.matchScores?.total ? parsed : fallback;
+      } catch (error) {
+        console.warn('Gemini fallo, usando fallback local:', error);
+        return fallback;
+      }
+    }
+
+    function obtenerGeminiApiKey() {
+      let key = localStorage.getItem('gemini_api_key_demo');
+      if (key) return key;
+
+      key = window.prompt('Pega tu API key de Gemini para calcular el match. Si cancelas, usare un match estimado local.');
+      if (key) {
+        localStorage.setItem('gemini_api_key_demo', key.trim());
+        return key.trim();
+      }
+      return '';
+    }
+
+    function calcularMatchFallback(vacante, perfil) {
+      const requisitos = (vacante.requisitos || []).map(r => String(r).trim().toLowerCase()).filter(Boolean);
+      const textoPerfil = perfil.resumenTexto.toLowerCase();
+      const coincidencias = requisitos.filter(req => textoPerfil.includes(req)).length;
+      const baseSkills = requisitos.length ? Math.round((coincidencias / requisitos.length) * 100) : 70;
+      const exp = perfil.experiencia.length ? Math.min(100, 45 + perfil.experiencia.length * 15) : (vacante.experiencia > 0 ? 35 : 70);
+      const edu = perfil.educacion.length ? Math.min(100, 50 + perfil.educacion.length * 12) : 40;
+      const idi = perfil.idiomas.length ? Math.min(100, 55 + perfil.idiomas.length * 10) : 45;
+      const total = Math.round((exp + edu + Math.max(idi, baseSkills)) / 3);
+
+      return {
+        matchScores: {
+          exp,
+          edu,
+          idi: Math.max(idi, baseSkills),
+          total
+        },
+        resumenIA: coincidencias
+          ? `La candidata muestra afinidad con ${coincidencias} requisito(s) clave y un perfil compatible con la vacante.`
+          : 'La candidata tiene compatibilidad parcial; conviene revisar su experiencia y formacion con mas detalle.'
+      };
+    }
+
+    function mostrarEstadoPostulacion(mensaje, tipo) {
+      estadoPostulacion.className = 'rounded-2xl p-4 text-sm font-medium';
+      if (tipo === 'success') {
+        estadoPostulacion.classList.add('bg-green-50', 'text-green-700');
+      } else if (tipo === 'warning') {
+        estadoPostulacion.classList.add('bg-yellow-50', 'text-yellow-700');
+      } else {
+        estadoPostulacion.classList.add('bg-red-50', 'text-red-700');
+      }
+      estadoPostulacion.innerText = mensaje;
+      estadoPostulacion.classList.remove('hidden');
+    }
+
+    inicializarBolsa();
+  </script>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Postulantes | Admin Mibanco</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<script src="/js/tailwind.js"></script>
+</head>
+
+<body class="bg-slate-100 flex min-h-screen">
+
+	<!-- SIDEBAR DINÁMICO -->
+	<div id="sidebar-placeholder"></div>
+
+	<!-- CONTENIDO -->
+	<main class="ml-72 flex-1 p-10">
+		<div class="bg-[#f2f2f2] p-8 rounded-xl shadow-lg border border-gray-200">
+			<div class="bg-mi-verde text-white text-center py-3 rounded-t-xl font-bold text-xl mb-4">
+				Registro de candidatos
+			</div>
+
+			<table class="w-full text-center border-separate border-spacing-y-2">
+				<thead>
+					<tr class="bg-mi-amarillo text-gray-800 font-bold uppercase text-sm">
+						<th class="py-4 rounded-l-lg border-r border-gray-300">Nombre</th>
+						<th class="py-4 border-r border-gray-300">Teléfono</th>
+						<th class="py-4 border-r border-gray-300">Email</th>
+						<th class="py-4 border-r border-gray-300">Puesto</th>
+						<th class="py-4 border-r border-gray-300">Porcentaje</th>
+						<th class="py-4 rounded-r-lg">More</th>
+					</tr>
+				</thead>
+				<tbody id="lista-postulantes"></tbody>
+			</table>
+		</div>
+	</main>
+
+	<script type="module">
+		import { cargarSidebarAdmin } from '../js/main.js';
+		import { auth, db } from '../assets/firebase/config.js';
+		import { doc, getDoc, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+		import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+		/* ================= SIDEBAR + AUTH ================= */
+		await cargarSidebarAdmin();
+
+		auth.onAuthStateChanged(async (user) => {
+			if (user) {
+				const snap = await getDoc(doc(db, "users", user.uid));
+
+				if (snap.exists()) {
+					const d = snap.data();
+
+					document.getElementById('admin-nombre-side').innerText = d.nombres || "Admin";
+					document.getElementById('admin-puesto-side').innerText =
+						`${d.puesto || 'Puesto'} (${d.codigo || '000'})`;
+
+					if (d.fotoUrl) {
+						document.getElementById('admin-foto-side').src = d.fotoUrl;
+					}
+				}
+
+				// Logout del sidebar dinámico
+				document.getElementById('btn-logout')
+					.addEventListener('click', () => signOut(auth));
+
+			} else {
+				window.location.href = '../index.html';
+			}
+		});
+
+		/* ================= POSTULANTES ================= */
+		async function cargar() {
+			const snap = await getDocs(query(collection(db, "postulaciones"), orderBy("fechaPostulacion", "desc")));
+			const tbody = document.getElementById('lista-postulantes');
+			tbody.innerHTML = "";
+
+			snap.forEach(docSnap => {
+				const p = docSnap.data();
+				const score = p.matchScores?.total || 0;
+
+				tbody.innerHTML += `
+          <tr class="bg-white shadow-sm hover:scale-[1.01] transition-transform">
+            <td class="py-4 font-bold italic border-r border-gray-100">
+              ${p.nombre || 'Candidata'}
+            </td>
+            <td class="py-4 border-r border-gray-100">${p.telefono || '-'}</td>
+            <td class="py-4 border-r border-gray-100 text-xs">${p.email || '-'}</td>
+            <td class="py-4 border-r border-gray-100">${p.tituloVacante || p.idVacante}</td>
+            <td class="py-4 border-r border-gray-100 font-bold 
+              ${score > 70 ? 'text-mi-verde' : 'text-mi-naranja'}">
+              ${score}%
+            </td>
+            <td class="py-4">
+              <i onclick="window.location.href='perfil-candidata.html?id=${docSnap.id}'"
+                class='bx bxs-plus-square text-mi-naranja text-3xl cursor-pointer'></i>
+            </td>
+          </tr>`;
+			});
+		}
+
+		cargar();
+	</script>
+
+</body>
+
+</html>

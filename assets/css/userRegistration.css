@@ -1,0 +1,17 @@
+#btn-google:hover{
+  background: #d47d00;
+}
+
+.btn-rojo:hover{
+  background: #d12e2e;
+}
+
+.btn-check:checked + .btn {
+    background-color: var(--celeste) !important;
+    color: white !important;
+    font-weight: bold;
+}
+
+.btn-celeste:hover{
+  background: #2a94bf;
+}

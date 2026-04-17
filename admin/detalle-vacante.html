@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Análisis de Vacante | Admin Mibanco</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<script src="/js/tailwind.js"></script>
+</head>
+
+<body class="bg-gray-100 flex min-h-screen">
+
+	<!--  SIDEBAR DINÁMICO -->
+	<div id="sidebar-placeholder"></div>
+
+	<!-- CONTENIDO -->
+	<main class="ml-72 flex-1 p-10">
+
+		<div class="flex justify-between items-center mb-8">
+			<h1 id="titulo-vacante" class="text-3xl font-bold text-gray-800 uppercase italic">
+				Cargando...
+			</h1>
+
+			<button onclick="history.back()" class="text-gray-500 text-3xl hover:text-mi-verde">
+				<i class='bx bx-undo'></i>
+			</button>
+		</div>
+
+		<div class="grid grid-cols-4 gap-6 mb-8">
+			<div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-mi-amarillo">
+				<h3 class="text-xs font-bold text-gray-400 uppercase">Requisitos</h3>
+				<ul id="lista-requisitos" class="text-xs mt-2 space-y-1"></ul>
+			</div>
+
+			<div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-mi-amarillo">
+				<h3 class="text-xs font-bold text-gray-400 uppercase">Beneficios/Oferta</h3>
+				<p class="text-xs mt-2">Seguro médico, línea de carrera, convenios.</p>
+			</div>
+
+			<div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-mi-amarillo">
+				<h3 class="text-xs font-bold text-gray-400 uppercase">Plazo</h3>
+				<p id="fecha-plazo" class="text-xs mt-2"></p>
+			</div>
+
+			<div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-mi-amarillo">
+				<h3 class="text-xs font-bold text-gray-400 uppercase">Detalles</h3>
+				<p id="detalle-vacantes" class=""></p>
+				<p id="detalle-modalidad" class="text-sm"></p>
+			</div>
+		</div>
+
+		<div class="grid grid-cols-2 gap-8">
+			<div class="bg-white p-8 rounded-3xl shadow-sm">
+				<h3 class="font-bold mb-4 italic">Descripción</h3>
+				<p id="descripcion-vacante" class="text-xs text-gray-500 leading-relaxed"></p>
+			</div>
+
+			<div class="bg-white p-8 rounded-3xl shadow-sm flex flex-col items-center">
+				<h3 class="font-bold mb-4 italic text-gray-700">Estadísticas de Postulación</h3>
+				<div class="flex gap-4 w-full justify-around">
+					<div class="relative h-48 w-1/2">
+						<canvas id="chartDona"></canvas>
+					</div>
+					<div class="relative h-48 w-1/2">
+						<canvas id="chartBarra"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</main>
+
+	<script type="module">
+		import { cargarSidebarAdmin } from '../js/main.js';
+		import { auth, db } from '../assets/firebase/config.js';
+		import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+		import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+		/* sidebar */
+		await cargarSidebarAdmin();
+
+		auth.onAuthStateChanged(async (user) => {
+			if (user) {
+				const snap = await getDoc(doc(db, "users", user.uid));
+
+				if (snap.exists()) {
+					const d = snap.data();
+
+					document.getElementById('admin-nombre-side').innerText = d.nombres || "Admin";
+					document.getElementById('admin-puesto-side').innerText =
+						`${d.puesto || 'Puesto'} (${d.codigo || '000'})`;
+
+					if (d.fotoUrl) {
+						document.getElementById('admin-foto-side').src = d.fotoUrl;
+					}
+				}
+
+				document.getElementById('btn-logout')
+					.addEventListener('click', () => signOut(auth));
+
+			} else {
+				window.location.href = '../index.html';
+			}
+		});
+
+		/* vacante */
+		const params = new URLSearchParams(window.location.search);
+		const id = params.get('id');
+
+		async function cargarInfo() {
+			const snap = await getDoc(doc(db, "vacantes", id));
+
+			if (snap.exists()) {
+				const v = snap.data();
+
+				document.getElementById('titulo-vacante').innerText = v.titulo;
+				document.getElementById('descripcion-vacante').innerText = v.descripcion;
+				document.getElementById('fecha-plazo').innerText =
+					`Inicio: ${v.fechaInicio?.toDate().toLocaleDateString()}`;
+
+				document.getElementById('detalle-modalidad').innerText =
+					`Modalidad: ${v.modalidad}`;
+
+				const reqLista = document.getElementById('lista-requisitos');
+				reqLista.innerHTML = "";
+				v.requisitos?.forEach(r => {
+					reqLista.innerHTML += `<li>• ${r}</li>`;
+				});
+
+				crearGraficos();
+			}
+		}
+
+		/* gráficos */
+		function crearGraficos() {
+			const opcionesComunes = {
+				responsive: true,
+				maintainAspectRatio: false, 
+				plugins: {
+					legend: {
+						position: 'bottom',
+						labels: { boxWidth: 12, font: { size: 10 } }
+					}
+				}
+			};
+
+			new Chart(document.getElementById('chartDona'), {
+				type: 'doughnut',
+				data: {
+					labels: ['Match', 'En proceso', 'Descarte'],
+					datasets: [{
+						data: [12, 19, 3],
+						backgroundColor: ['#008f39', '#ffce00', '#ff8000']
+					}]
+				},
+				options: opcionesComunes
+			});
+
+			new Chart(document.getElementById('chartBarra'), {
+				type: 'bar',
+				data: {
+					labels: ['Descarte', 'Opción 2', 'Entrevista'],
+					datasets: [{
+						label: 'Postulantes',
+						data: [80, 40, 25],
+						backgroundColor: ['#f4323f', '#ffce00', '#008f39']
+					}]
+				},
+				options: opcionesComunes
+			});
+		}
+
+		cargarInfo();
+	</script>
+
+</body>
+
+</html>
