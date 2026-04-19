@@ -117,7 +117,7 @@
   <script type="module">
     import { db, auth, firebaseConfig } from './assets/firebase/config.js';
     import { initializeApp as initializeAiApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-    import { getAI, getGenerativeModel, GoogleAIBackend } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-ai.js";
+    import { getAI, getGenerativeModel, VertexAIBackend } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-ai.js";
     import {
       collection,
       getDocs,
@@ -135,8 +135,29 @@
     let vacantesOriginales = [];
     let vacanteSeleccionada = null;
     const aiApp = initializeAiApp(firebaseConfig, 'match-ai');
-    const ai = getAI(aiApp, { backend: new GoogleAIBackend() });
-    const modeloMatchIA = getGenerativeModel(ai, { model: 'gemini-2.5-flash' });
+    const ai = getAI(aiApp, { backend: new VertexAIBackend() });
+    const matchJsonSchema = {
+      type: "object",
+      properties: {
+        matchScores: {
+          type: "object",
+          properties: {
+            exp: { type: "integer" },
+            edu: { type: "integer" },
+            idi: { type: "integer" },
+            total: { type: "integer" }
+          }
+        },
+        resumenIA: { type: "string" }
+      }
+    };
+    const modeloMatchIA = getGenerativeModel(ai, {
+      model: 'gemini-2.5-flash',
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: matchJsonSchema
+      }
+    });
 
     async function inicializarBolsa() {
       const ahora = new Date();
@@ -296,7 +317,7 @@
         btnConfirmarPostulacion.innerText = 'Postulacion enviada';
       } catch (error) {
         console.error('Error al postular:', error);
-        mostrarEstadoPostulacion('Ocurrio un error al registrar la postulacion.', 'error');
+        mostrarEstadoPostulacion(error?.message || 'Ocurrio un error al registrar la postulacion.', 'error');
         btnConfirmarPostulacion.disabled = false;
         btnConfirmarPostulacion.innerText = 'Confirmar postulacion';
       }
@@ -377,7 +398,7 @@
       return patronesIdioma.some(patron => textoVacante.includes(patron));
     }
 
-    function sanitizarMatchRespuesta(data, fallback) {
+    function sanitizarMatchRespuesta(data) {
       const scores = data?.matchScores || {};
       const clamp = value => Math.max(0, Math.min(100, Number(value) || 0));
       const exp = clamp(scores.exp);
@@ -386,7 +407,9 @@
       const promedio = Math.round((exp + edu + idi) / 3);
       const total = clamp(scores.total);
 
-      if (!exp && !edu && !idi && !total) return fallback;
+      if (!exp && !edu && !idi && !total) {
+        throw new Error('La IA devolvio un match vacio o invalido.');
+      }
 
       return {
         matchScores: {
@@ -395,12 +418,11 @@
           idi,
           total: total || promedio
         },
-        resumenIA: String(data?.resumenIA || fallback.resumenIA || '').trim() || fallback.resumenIA
+        resumenIA: String(data?.resumenIA || '').trim() || 'La IA no devolvio un resumen util.'
       };
     }
 
     async function calcularMatch(vacante, perfil) {
-      const fallback = calcularMatchFallback(vacante, perfil);
       const exigeIdiomas = vacanteExigeIdiomas(vacante);
 
       const prompt = `
@@ -456,38 +478,12 @@ Reglas:
 
         const result = await modeloMatchIA.generateContent(partesPrompt);
         const text = result.response.text() || '';
-        const clean = text.replace(/```json|```/g, '').trim();
-        const parsed = JSON.parse(clean);
-        return sanitizarMatchRespuesta(parsed, fallback);
+        const parsed = JSON.parse(text);
+        return sanitizarMatchRespuesta(parsed);
       } catch (error) {
-        console.warn('Firebase AI Logic / Gemini fallo, usando fallback local:', error);
-        return fallback;
+        console.error('Firebase AI Logic / Vertex AI fallo:', error);
+        throw new Error(`No se pudo obtener un match valido desde la IA. ${error?.message || ''}`.trim());
       }
-    }
-
-    function calcularMatchFallback(vacante, perfil) {
-      const requisitos = (vacante.requisitos || []).map(r => String(r).trim().toLowerCase()).filter(Boolean);
-      const textoPerfil = perfil.resumenTexto.toLowerCase();
-      const exigeIdiomas = vacanteExigeIdiomas(vacante);
-      const coincidencias = requisitos.filter(req => textoPerfil.includes(req)).length;
-      const baseSkills = requisitos.length ? Math.round((coincidencias / requisitos.length) * 100) : 70;
-      const exp = perfil.experiencia.length ? Math.min(100, 45 + perfil.experiencia.length * 15) : (vacante.experiencia > 0 ? 35 : 70);
-      const edu = perfil.educacion.length ? Math.min(100, 50 + perfil.educacion.length * 12) : 40;
-      const idiBase = perfil.idiomas.length ? Math.min(100, 55 + perfil.idiomas.length * 10) : (exigeIdiomas ? 35 : 70);
-      const idi = exigeIdiomas ? Math.max(idiBase, Math.round(baseSkills * 0.7)) : idiBase;
-      const total = Math.round((exp * 0.4) + (edu * 0.3) + (Math.max(idi, baseSkills) * 0.3));
-
-      return {
-        matchScores: {
-          exp,
-          edu,
-          idi,
-          total
-        },
-        resumenIA: coincidencias
-          ? `La candidata muestra afinidad con ${coincidencias} requisito(s) clave y un perfil parcialmente alineado con la vacante.`
-          : 'La candidata tiene compatibilidad parcial; conviene revisar con mas detalle su experiencia, formacion y evidencias del CV.'
-      };
     }
 
     function mostrarEstadoPostulacion(mensaje, tipo) {
