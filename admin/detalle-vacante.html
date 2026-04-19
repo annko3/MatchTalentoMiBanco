@@ -3,83 +3,171 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Análisis de Vacante | Admin Mibanco</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Analisis de Vacante | Admin Mibanco</title>
 	<script src="https://cdn.tailwindcss.com"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 	<script src="/js/tailwind.js"></script>
 </head>
 
-<body class="bg-gray-100 flex min-h-screen">
+<body class="bg-gray-100 min-h-screen">
+	<div class="flex min-h-screen">
+		<div id="sidebar-placeholder"></div>
 
-	<!--  SIDEBAR DINÁMICO -->
-	<div id="sidebar-placeholder"></div>
+		<main class="ml-0 lg:ml-72 flex-1 p-4 md:p-8 lg:p-10 space-y-8">
+			<div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+				<div>
+					<p class="text-xs uppercase tracking-[0.3em] text-mi-verde font-black">Detalle de Vacante</p>
+					<h1 id="titulo-vacante" class="text-3xl font-bold text-gray-800 uppercase font-helvetica">
+						Cargando...
+					</h1>
+				</div>
 
-	<!-- CONTENIDO -->
-	<main class="ml-72 flex-1 p-10">
-
-		<div class="flex justify-between items-center mb-8">
-			<h1 id="titulo-vacante" class="text-3xl font-bold text-gray-800 uppercase italic">
-				Cargando...
-			</h1>
-
-			<button onclick="history.back()" class="text-gray-500 text-3xl hover:text-mi-verde">
-				<i class='bx bx-undo'></i>
-			</button>
-		</div>
-
-		<div class="grid grid-cols-4 gap-6 mb-8">
-			<div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-mi-amarillo">
-				<h3 class="text-xs font-bold text-gray-400 uppercase">Requisitos</h3>
-				<ul id="lista-requisitos" class="text-xs mt-2 space-y-1"></ul>
+				<div class="flex items-center gap-3">
+					<a href="vacantes.html"
+						class="px-4 py-3 rounded-2xl bg-white text-gray-500 font-bold shadow-sm hover:text-mi-verde transition">
+						Volver a vacantes
+					</a>
+					<button onclick="history.back()"
+						class="w-12 h-12 rounded-2xl bg-white text-gray-500 text-3xl hover:text-mi-verde shadow-sm">
+						<i class='bx bx-undo'></i>
+					</button>
+				</div>
 			</div>
 
-			<div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-mi-amarillo">
-				<h3 class="text-xs font-bold text-gray-400 uppercase">Beneficios/Oferta</h3>
-				<p class="text-xs mt-2">Seguro médico, línea de carrera, convenios.</p>
-			</div>
+			<section class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+				<div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+					<h3 class="text-xs font-bold text-gray-400 uppercase">Requisitos</h3>
+					<ul id="lista-requisitos" class="text-sm mt-3 space-y-2 text-gray-600"></ul>
+				</div>
 
-			<div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-mi-amarillo">
-				<h3 class="text-xs font-bold text-gray-400 uppercase">Plazo</h3>
-				<p id="fecha-plazo" class="text-xs mt-2"></p>
-			</div>
-
-			<div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-mi-amarillo">
-				<h3 class="text-xs font-bold text-gray-400 uppercase">Detalles</h3>
-				<p id="detalle-vacantes" class=""></p>
-				<p id="detalle-modalidad" class="text-sm"></p>
-			</div>
-		</div>
-
-		<div class="grid grid-cols-2 gap-8">
-			<div class="bg-white p-8 rounded-3xl shadow-sm">
-				<h3 class="font-bold mb-4 italic">Descripción</h3>
-				<p id="descripcion-vacante" class="text-xs text-gray-500 leading-relaxed"></p>
-			</div>
-
-			<div class="bg-white p-8 rounded-3xl shadow-sm flex flex-col items-center">
-				<h3 class="font-bold mb-4 italic text-gray-700">Estadísticas de Postulación</h3>
-				<div class="flex gap-4 w-full justify-around">
-					<div class="relative h-48 w-1/2">
-						<canvas id="chartDona"></canvas>
+				<div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+					<h3 class="text-xs font-bold text-gray-400 uppercase">Resumen</h3>
+					<div class="mt-3 space-y-2 text-sm text-gray-600">
+						<p id="detalle-vacantes"></p>
+						<p id="detalle-modalidad"></p>
+						<p id="fecha-plazo"></p>
 					</div>
-					<div class="relative h-48 w-1/2">
-						<canvas id="chartBarra"></canvas>
+				</div>
+
+				<div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+					<h3 class="text-xs font-bold text-gray-400 uppercase">Embudo IA</h3>
+					<div class="mt-4 space-y-3">
+						<div class="flex items-center justify-between">
+							<span class="text-sm text-gray-500">Verde (76 - 100)</span>
+							<span id="count-score-verde" class="text-lg font-black text-mi-verde">0</span>
+						</div>
+						<div class="flex items-center justify-between">
+							<span class="text-sm text-gray-500">Amarillo (51 - 75)</span>
+							<span id="count-score-amarillo" class="text-lg font-black text-yellow-500">0</span>
+						</div>
+						<div class="flex items-center justify-between">
+							<span class="text-sm text-gray-500">Rojo (0 - 50)</span>
+							<span id="count-score-rojo" class="text-lg font-black text-red-500">0</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+					<h3 class="text-xs font-bold text-gray-400 uppercase">Decisiones</h3>
+					<div class="mt-4 space-y-3">
+						<div class="flex items-center justify-between">
+							<span class="text-sm text-gray-500">Entrevista</span>
+							<span id="count-estado-verde" class="text-lg font-black text-mi-verde">0</span>
+						</div>
+						<div class="flex items-center justify-between">
+							<span class="text-sm text-gray-500">Opcion 2 / Pendientes</span>
+							<span id="count-estado-amarillo" class="text-lg font-black text-yellow-500">0</span>
+						</div>
+						<div class="flex items-center justify-between">
+							<span class="text-sm text-gray-500">Descartadas</span>
+							<span id="count-estado-rojo" class="text-lg font-black text-red-500">0</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="grid grid-cols-1 2xl:grid-cols-[1.1fr_0.9fr] gap-8">
+				<div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+					<h3 class="font-bold mb-4 font-helvetica text-gray-700">Descripcion del puesto</h3>
+					<p id="descripcion-vacante" class="text-sm text-gray-500 leading-relaxed"></p>
+				</div>
+
+				<div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+					<h3 class="font-bold mb-6 font-helvetica text-gray-700">Estadisticas de postulacion</h3>
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div class="relative h-72">
+							<canvas id="chartDona"></canvas>
+						</div>
+						<div class="relative h-72">
+							<canvas id="chartBarra"></canvas>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+				<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
+					<div>
+						<h3 class="font-bold font-helvetica text-gray-700">Postulantes de la vacante</h3>
+						<p class="text-sm text-gray-500">Revisa el score, el resumen IA, el CV y mueve a cada candidata según criterio humano.</p>
+					</div>
+					<p id="resumen-postulantes" class="text-sm font-bold text-gray-500">0 postulantes</p>
+				</div>
+
+				<div id="lista-postulantes" class="space-y-4"></div>
+			</section>
+		</main>
+	</div>
+
+	<div id="modal-cv-admin" class="hidden fixed inset-0 z-[130] bg-black/70 backdrop-blur-sm p-4">
+		<div class="max-w-5xl mx-auto h-full flex items-center justify-center">
+			<div class="bg-white w-full h-[88vh] rounded-3xl shadow-2xl p-6 flex flex-col">
+				<div class="flex items-center justify-between gap-4 mb-4">
+					<div>
+						<h3 class="text-2xl font-black text-mi-verde uppercase font-helvetica">CV de la postulante</h3>
+						<p id="cv-admin-titulo" class="text-sm text-gray-500 mt-1">Documento cargado</p>
+					</div>
+					<div class="flex items-center gap-3">
+						<a id="cv-admin-link" href="#" target="_blank" rel="noopener noreferrer"
+							class="bg-mi-amarillo text-gray-800 px-4 py-3 rounded-full font-black text-xs uppercase">
+							Abrir aparte
+						</a>
+						<button onclick="cerrarModalCVAdmin()" class="text-gray-400 hover:text-gray-700 text-3xl leading-none">&times;</button>
+					</div>
+				</div>
+
+				<div id="cv-admin-frame-wrapper" class="hidden flex-1 rounded-3xl overflow-hidden border border-gray-200">
+					<iframe id="cv-admin-frame" class="w-full h-full" title="CV de postulante"></iframe>
+				</div>
+
+				<div id="cv-admin-fallback"
+					class="hidden flex-1 rounded-3xl border border-dashed border-gray-300 bg-gray-50 flex items-center justify-center text-center p-8">
+					<div>
+						<i class="bx bx-file text-6xl text-mi-verde"></i>
+						<p class="text-lg font-bold mt-4">Este archivo no se puede ver dentro del navegador.</p>
+						<p class="text-sm text-gray-500 mt-2">Usa "Abrir aparte" para revisarlo.</p>
 					</div>
 				</div>
 			</div>
 		</div>
-
-	</main>
+	</div>
 
 	<script type="module">
 		import { cargarSidebarAdmin } from '../js/main.js';
 		import { auth, db } from '../assets/firebase/config.js';
-		import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+		import { doc, getDoc, collection, getDocs, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 		import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-		/* sidebar */
 		await cargarSidebarAdmin();
+
+		let chartDonaInstance = null;
+		let chartBarraInstance = null;
+		let postulacionesVacante = [];
+
+		const params = new URLSearchParams(window.location.search);
+		const id = params.get('id');
 
 		auth.onAuthStateChanged(async (user) => {
 			if (user) {
@@ -87,57 +175,199 @@
 
 				if (snap.exists()) {
 					const d = snap.data();
-
 					document.getElementById('admin-nombre-side').innerText = d.nombres || "Admin";
-					document.getElementById('admin-puesto-side').innerText =
-						`${d.puesto || 'Puesto'} (${d.codigo || '000'})`;
+					document.getElementById('admin-puesto-side').innerText = `${d.puesto || 'Puesto'} (${d.codigo || '000'})`;
 
 					if (d.fotoUrl) {
 						document.getElementById('admin-foto-side').src = d.fotoUrl;
 					}
 				}
 
-				document.getElementById('btn-logout')
-					.addEventListener('click', () => signOut(auth));
-
+				document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+				await cargarInfo();
 			} else {
 				window.location.href = '../index.html';
 			}
 		});
 
-		/* vacante */
-		const params = new URLSearchParams(window.location.search);
-		const id = params.get('id');
-
-		async function cargarInfo() {
-			const snap = await getDoc(doc(db, "vacantes", id));
-
-			if (snap.exists()) {
-				const v = snap.data();
-
-				document.getElementById('titulo-vacante').innerText = v.titulo;
-				document.getElementById('descripcion-vacante').innerText = v.descripcion;
-				document.getElementById('fecha-plazo').innerText =
-					`Inicio: ${v.fechaInicio?.toDate().toLocaleDateString()}`;
-
-				document.getElementById('detalle-modalidad').innerText =
-					`Modalidad: ${v.modalidad}`;
-
-				const reqLista = document.getElementById('lista-requisitos');
-				reqLista.innerHTML = "";
-				v.requisitos?.forEach(r => {
-					reqLista.innerHTML += `<li>• ${r}</li>`;
-				});
-
-				crearGraficos();
-			}
+		function obtenerColorScore(score) {
+			if (score <= 50) return {
+				clase: 'bg-red-100 text-red-700',
+				label: 'Rojo'
+			};
+			if (score <= 75) return {
+				clase: 'bg-yellow-100 text-yellow-700',
+				label: 'Amarillo'
+			};
+			return {
+				clase: 'bg-green-100 text-green-700',
+				label: 'Verde'
+			};
 		}
 
-		/* gráficos */
-		function crearGraficos() {
+		function clasificarEstado(estado = '') {
+			const valor = String(estado).toLowerCase();
+			if (valor.includes('entrevista')) return 'verde';
+			if (valor.includes('descart')) return 'rojo';
+			return 'amarillo';
+		}
+
+		function renderEstadoChip(estado = 'Postulada') {
+			const grupo = clasificarEstado(estado);
+			const mapa = {
+				verde: 'bg-green-100 text-green-700',
+				amarillo: 'bg-yellow-100 text-yellow-700',
+				rojo: 'bg-red-100 text-red-700'
+			};
+
+			return `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-black uppercase ${mapa[grupo]}">${estado}</span>`;
+		}
+
+		function calcularMetricas(postulaciones) {
+			const metricas = {
+				scoreRojo: 0,
+				scoreAmarillo: 0,
+				scoreVerde: 0,
+				estadoRojo: 0,
+				estadoAmarillo: 0,
+				estadoVerde: 0
+			};
+
+			postulaciones.forEach((postulacion) => {
+				const score = postulacion.matchScores?.total || 0;
+				if (score <= 50) metricas.scoreRojo += 1;
+				else if (score <= 75) metricas.scoreAmarillo += 1;
+				else metricas.scoreVerde += 1;
+
+				const estadoGrupo = clasificarEstado(postulacion.estado);
+				if (estadoGrupo === 'verde') metricas.estadoVerde += 1;
+				else if (estadoGrupo === 'rojo') metricas.estadoRojo += 1;
+				else metricas.estadoAmarillo += 1;
+			});
+
+			return metricas;
+		}
+
+		async function cargarInfo() {
+			const [snapVacante, snapPostulaciones] = await Promise.all([
+				getDoc(doc(db, "vacantes", id)),
+				getDocs(query(collection(db, "postulaciones"), where("idVacante", "==", id)))
+			]);
+
+			if (!snapVacante.exists()) {
+				document.getElementById('titulo-vacante').innerText = 'Vacante no encontrada';
+				return;
+			}
+
+			const v = snapVacante.data();
+			postulacionesVacante = snapPostulaciones.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
+
+			document.getElementById('titulo-vacante').innerText = v.titulo;
+			document.getElementById('descripcion-vacante').innerText = v.descripcion;
+			document.getElementById('fecha-plazo').innerText =
+				`Vigencia: ${v.fechaInicio?.toDate().toLocaleDateString() || '-'} - ${v.fechaFin?.toDate().toLocaleDateString() || '-'}`;
+			document.getElementById('detalle-vacantes').innerText = `Experiencia minima: ${v.experiencia || 0} meses`;
+			document.getElementById('detalle-modalidad').innerText = `Modalidad: ${v.modalidad || 'No especificada'} | Distrito: ${v.distrito || 'No especificado'}`;
+
+			const reqLista = document.getElementById('lista-requisitos');
+			reqLista.innerHTML = "";
+			(v.requisitos || []).forEach(r => {
+				reqLista.innerHTML += `<li class="flex gap-2"><span class="text-mi-verde font-black">•</span><span>${r}</span></li>`;
+			});
+
+			actualizarDashboardPostulaciones();
+		}
+
+		function actualizarDashboardPostulaciones() {
+			const metricas = calcularMetricas(postulacionesVacante);
+			document.getElementById('count-score-verde').innerText = metricas.scoreVerde;
+			document.getElementById('count-score-amarillo').innerText = metricas.scoreAmarillo;
+			document.getElementById('count-score-rojo').innerText = metricas.scoreRojo;
+			document.getElementById('count-estado-verde').innerText = metricas.estadoVerde;
+			document.getElementById('count-estado-amarillo').innerText = metricas.estadoAmarillo;
+			document.getElementById('count-estado-rojo').innerText = metricas.estadoRojo;
+			document.getElementById('resumen-postulantes').innerText = `${postulacionesVacante.length} postulantes`;
+
+			renderizarListaPostulantes(postulacionesVacante);
+			crearGraficos(metricas);
+		}
+
+		function renderizarListaPostulantes(postulaciones) {
+			const contenedor = document.getElementById('lista-postulantes');
+			if (!postulaciones.length) {
+				contenedor.innerHTML = `
+					<div class="rounded-3xl border border-dashed border-gray-200 p-10 text-center text-gray-400">
+						Aun no hay postulantes en esta vacante.
+					</div>
+				`;
+				return;
+			}
+
+			const ordenadas = [...postulaciones].sort((a, b) => (b.matchScores?.total || 0) - (a.matchScores?.total || 0));
+			contenedor.innerHTML = ordenadas.map((postulacion) => {
+				const score = postulacion.matchScores?.total || 0;
+				const scoreColor = obtenerColorScore(score);
+				const scores = postulacion.matchScores || {};
+				return `
+					<div class="rounded-3xl border border-gray-100 p-5 md:p-6 bg-gray-50">
+						<div class="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-4">
+							<div class="space-y-3">
+								<div class="flex flex-wrap items-center gap-3">
+									<h4 class="text-lg font-black text-gray-800 uppercase">${postulacion.nombre || 'Postulante'}</h4>
+									<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-black uppercase ${scoreColor.clase}">
+										${score}% ${scoreColor.label}
+									</span>
+									${renderEstadoChip(postulacion.estado || 'Postulada')}
+								</div>
+								<div class="text-sm text-gray-500 flex flex-wrap gap-x-5 gap-y-1">
+									<span>${postulacion.email || '-'}</span>
+									<span>${postulacion.telefono || '-'}</span>
+									<span>${postulacion.cvNombre || 'Sin CV'}</span>
+								</div>
+								<p class="text-sm text-gray-600 leading-relaxed">${postulacion.resumenIA || 'Sin resumen IA disponible.'}</p>
+								<div class="flex flex-wrap gap-3 text-xs font-bold uppercase">
+									<span class="px-3 py-2 bg-white rounded-2xl border border-gray-200">Exp ${scores.exp || 0}%</span>
+									<span class="px-3 py-2 bg-white rounded-2xl border border-gray-200">Edu ${scores.edu || 0}%</span>
+									<span class="px-3 py-2 bg-white rounded-2xl border border-gray-200">Idi ${scores.idi || 0}%</span>
+								</div>
+							</div>
+
+							<div class="flex flex-col gap-3 xl:min-w-[290px]">
+								<div class="grid grid-cols-2 gap-3">
+									<button onclick="actualizarEstadoPostulacion('${postulacion.id}', 'Entrevista')"
+										class="px-4 py-3 rounded-2xl bg-mi-verde text-white text-xs font-black uppercase hover:bg-green-800 transition">
+										Pasar a entrevista
+									</button>
+									<button onclick="actualizarEstadoPostulacion('${postulacion.id}', 'Opcion 2')"
+										class="px-4 py-3 rounded-2xl bg-yellow-400 text-gray-800 text-xs font-black uppercase hover:bg-yellow-500 transition">
+										Marcar opcion 2
+									</button>
+								</div>
+								<div class="grid grid-cols-2 gap-3">
+									<button onclick="actualizarEstadoPostulacion('${postulacion.id}', 'Descartada')"
+										class="px-4 py-3 rounded-2xl bg-red-500 text-white text-xs font-black uppercase hover:bg-red-600 transition">
+										Descartar
+									</button>
+									<button onclick="verCVAdmin('${postulacion.cvUrl || ''}', '${(postulacion.cvNombre || 'CV de postulante').replace(/'/g, "\\'")}')"
+										class="px-4 py-3 rounded-2xl bg-white border border-gray-200 text-gray-700 text-xs font-black uppercase hover:border-mi-verde hover:text-mi-verde transition">
+										Ver CV aqui
+									</button>
+								</div>
+								<a href="perfil-candidata.html?id=${postulacion.id}"
+									class="px-4 py-3 rounded-2xl bg-white border border-gray-200 text-center text-xs font-black uppercase text-gray-700 hover:border-mi-verde hover:text-mi-verde transition">
+									Ver detalle IA
+								</a>
+							</div>
+						</div>
+					</div>
+				`;
+			}).join('');
+		}
+
+		function crearGraficos(metricas) {
 			const opcionesComunes = {
 				responsive: true,
-				maintainAspectRatio: false, 
+				maintainAspectRatio: false,
 				plugins: {
 					legend: {
 						position: 'bottom',
@@ -146,35 +376,80 @@
 				}
 			};
 
-			new Chart(document.getElementById('chartDona'), {
+			chartDonaInstance?.destroy();
+			chartBarraInstance?.destroy();
+
+			chartDonaInstance = new Chart(document.getElementById('chartDona'), {
 				type: 'doughnut',
 				data: {
-					labels: ['Match', 'En proceso', 'Descarte'],
+					labels: ['76 - 100', '51 - 75', '0 - 50'],
 					datasets: [{
-						data: [12, 19, 3],
-						backgroundColor: ['#008f39', '#ffce00', '#ff8000']
+						data: [metricas.scoreVerde, metricas.scoreAmarillo, metricas.scoreRojo],
+						backgroundColor: ['#008f39', '#ffce00', '#f4323f']
 					}]
 				},
 				options: opcionesComunes
 			});
 
-			new Chart(document.getElementById('chartBarra'), {
+			chartBarraInstance = new Chart(document.getElementById('chartBarra'), {
 				type: 'bar',
 				data: {
-					labels: ['Descarte', 'Opción 2', 'Entrevista'],
+					labels: ['Descartadas', 'Opcion 2 / Pendientes', 'Entrevista'],
 					datasets: [{
 						label: 'Postulantes',
-						data: [80, 40, 25],
-						backgroundColor: ['#f4323f', '#ffce00', '#008f39']
+						data: [metricas.estadoRojo, metricas.estadoAmarillo, metricas.estadoVerde],
+						backgroundColor: ['#f4323f', '#ffce00', '#008f39'],
+						borderRadius: 12
 					}]
 				},
-				options: opcionesComunes
+				options: {
+					...opcionesComunes,
+					scales: {
+						y: {
+							beginAtZero: true,
+							ticks: { precision: 0 }
+						}
+					}
+				}
 			});
 		}
 
-		cargarInfo();
-	</script>
+		window.actualizarEstadoPostulacion = async (idPostulacion, nuevoEstado) => {
+			await updateDoc(doc(db, "postulaciones", idPostulacion), { estado: nuevoEstado });
+			postulacionesVacante = postulacionesVacante.map((item) =>
+				item.id === idPostulacion ? { ...item, estado: nuevoEstado } : item
+			);
+			actualizarDashboardPostulaciones();
+		};
 
+		window.cerrarModalCVAdmin = () => {
+			document.getElementById('modal-cv-admin').classList.add('hidden');
+			document.getElementById('cv-admin-frame').src = '';
+		};
+
+		window.verCVAdmin = (cvUrl, cvNombre) => {
+			if (!cvUrl) {
+				alert('Esta postulante aun no tiene un CV previsualizable.');
+				return;
+			}
+
+			document.getElementById('cv-admin-titulo').innerText = cvNombre || 'CV de postulante';
+			document.getElementById('cv-admin-link').href = cvUrl;
+
+			const esPdf = cvUrl.toLowerCase().includes('.pdf') || cvUrl.includes('application%2Fpdf');
+			if (esPdf) {
+				document.getElementById('cv-admin-frame').src = cvUrl;
+				document.getElementById('cv-admin-frame-wrapper').classList.remove('hidden');
+				document.getElementById('cv-admin-fallback').classList.add('hidden');
+			} else {
+				document.getElementById('cv-admin-frame').src = '';
+				document.getElementById('cv-admin-frame-wrapper').classList.add('hidden');
+				document.getElementById('cv-admin-fallback').classList.remove('hidden');
+			}
+
+			document.getElementById('modal-cv-admin').classList.remove('hidden');
+		};
+	</script>
 </body>
 
 </html>
