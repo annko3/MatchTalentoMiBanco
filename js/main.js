@@ -4,7 +4,6 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-
 
 /**
  * CARGAR NAVBAR CANDIDATA
- * Gestiona el menú superior dinámico, el saludo personalizado y el menú desplegable "Yo".
  */
 export async function cargarNavbarCandidata() {
 	const placeholder = document.getElementById('navbar-placeholder');
@@ -49,7 +48,7 @@ export async function cargarNavbarCandidata() {
 				actions.innerHTML = `
           <div class="relative group">
             <div class="flex items-center space-x-3 cursor-pointer py-4">
-              <span class="text-mi-verde font-bold italic text-sm">¡Hola, ${nombre}!</span>
+              <span class="text-mi-verde font-bold font-helvetica text-sm">¡Hola, ${nombre}!</span>
               <div class="flex flex-col items-center">
                 <div class="w-10 h-10 rounded-full border-2 border-mi-amarillo overflow-hidden shadow-sm group-hover:border-mi-verde transition">
                   <img src="${foto}" class="w-full h-full object-cover">
@@ -64,9 +63,10 @@ export async function cargarNavbarCandidata() {
               <a href="${prefijoRuta}candidata/dashboard.html" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-mi-verde transition">
                 <i class='bx bx-user-circle text-xl'></i> Mi Perfil / CV
               </a>
+			<!--MIS POSTULACIONES
               <a href="${prefijoRuta}candidata/postulaciones.html" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-mi-verde transition">
                 <i class='bx bx-briefcase-alt-2 text-xl'></i> Mis Postulaciones
-              </a>
+              </a>-->
               <div class="border-t border-gray-100 my-1"></div>
               <button id="btn-logout-nav" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-mi-rojo hover:bg-red-50 transition font-bold">
                 <i class='bx bx-log-out text-xl'></i> Cerrar Sesión
