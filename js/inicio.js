@@ -16,7 +16,13 @@ const historiasExito = [
     cargo: "Supervisora de Agencia",
     historia: "Comenzo en un rol operativo y fue creciendo con acompanamiento, formacion y una ruta clara de desarrollo interno.",
     tono: "amarillo"
-  }
+  },
+	{
+    nombre: "Diana",
+    cargo: "Analista de Riesgos", 
+    historia: "Comenzo en validacion de documentos. Hoy lidera la evaluacion de creditos complejos y capacita a nuevas analistas en prevencion de fraudes.",
+    tono: "celeste",
+	}
 ];
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -60,26 +66,54 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function renderHistoriasExito() {
-	const contenedor = document.getElementById("historias-exito-grid");
-	if (!contenedor) return;
+	const wrapper = document.getElementById("historias-slider-wrapper");
+	if (!wrapper) return;
 
 	const estilos = {
 		naranja: "border-mi-naranja text-mi-naranja",
 		verde: "border-mi-verde text-mi-verde",
-		amarillo: "border-mi-amarillo text-yellow-600"
+		amarillo: "border-mi-amarillo text-yellow-600",
+		celeste: "border-mi-celeste text-mi-celeste"
 	};
 
-	contenedor.innerHTML = historiasExito.map((historia, index) => `
-		<article class="bg-white rounded-[28px] p-8 shadow-xl border border-white/80">
-			<div class="flex items-center justify-between mb-6">
-				<span class="text-xs font-black uppercase tracking-[0.25em] text-gray-400">Historia ${index + 1}</span>
-				<span class="inline-flex items-center justify-center w-11 h-11 rounded-full border-2 ${estilos[historia.tono]} font-black">
-					${historia.nombre.charAt(0)}
-				</span>
-			</div>
-			<h3 class="text-2xl font-black text-mi-verde uppercase">${historia.nombre}</h3>
-			<p class="text-sm font-bold text-gray-500 uppercase mt-2">${historia.cargo}</p>
-			<p class="text-gray-600 leading-relaxed mt-6">${historia.historia}</p>
-		</article>
+	wrapper.innerHTML = historiasExito.map((historia, index) => `
+		<div class="swiper-slide !h-auto">
+      <article class="bg-white rounded-[28px] p-8 shadow-xl border border-white/80 h-full">
+        <div class="flex items-center justify-between mb-6">
+          <span class="text-xs font-black uppercase tracking-[0.25em] text-gray-400">Historia ${index + 1}</span>
+          <span class="inline-flex items-center justify-center w-11 h-11 rounded-full border-2 ${estilos[historia.tono]} font-black">
+            ${historia.nombre.charAt(0)}
+          </span>
+        </div>
+        <h3 class="text-2xl font-black text-mi-verde uppercase">${historia.nombre}</h3>
+        <p class="text-sm font-bold text-gray-500 uppercase mt-2">${historia.cargo}</p>
+        <p class="text-gray-600 leading-relaxed mt-6">${historia.historia}</p>
+      </article>
+    </div>
 	`).join('');
+
+	new Swiper(".historias-swiper", {
+		slidesPerView: 1,
+		spaceBetween: 20,
+		loop: true,
+		autoplay: {
+			delay: 4000,
+			disableOnInteraction: false,
+		},
+		pagination: {
+			el: ".swiper-pagination",
+			clickable: true,
+			dynamicBullets: true,
+		},
+		breakpoints: {
+			768: {
+				slidesPerView: 2,
+				spaceBetween: 24,
+			},
+			1024: {
+				slidesPerView: 3,
+				spaceBetween: 32,
+			},
+		}
+	});
 }
