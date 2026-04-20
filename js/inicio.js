@@ -10,19 +10,19 @@ const historiasExito = [
   {
     nombre: "Roxana",
     cargo: "Asesora de Negocios",
-    historia: "Entro buscando su primera oportunidad formal y hoy acompana a emprendedoras de su comunidad con metas mas grandes.",
+    historia: "Entró buscando su primera oportunidad formal y hoy acompaña a emprendedoras de su comunidad con metas más grandes.",
     tono: "naranja"
   },
   {
     nombre: "Milagros",
     cargo: "Analista de Creditos",
-    historia: "Fortalecio su manejo comercial, gano confianza en campo y se convirtio en referente para nuevas companeras del equipo.",
+    historia: "Fortaleció su manejo comercial, ganó confianza en campo y se convirtió en referente para nuevas compañeras del equipo.",
     tono: "verde"
   },
   {
     nombre: "Yuliana",
     cargo: "Supervisora de Agencia",
-    historia: "Comenzo en un rol operativo y fue creciendo con acompanamiento, formacion y una ruta clara de desarrollo interno.",
+    historia: "Comenzó en un rol operativo y fue creciendo con acompañamiento, formación y una ruta clara de desarrollo interno.",
     tono: "amarillo"
   }
 ];
