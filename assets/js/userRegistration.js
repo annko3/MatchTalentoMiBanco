@@ -230,7 +230,7 @@ window.añadirFormacion = function () {
   mostrarMensaje("Éxito", "Formación añadida correctamente", "success");
 };
 
-window.validarYCambiarAPaso6 = function() {
+window.validarYCambiarAPaso6 = function () {
   if (formaciones.length === 0) {
     mostrarMensaje("Error", "Debes agregar al menos una formación académica", "error");
     return;
@@ -387,7 +387,7 @@ async function subirTodosLosArchivos(userId) {
       for (let item of formacion.multimedia) {
         try {
           if (!item.file) continue;
-          
+
           const file = item.file;
           const extension = file.name.split(".").pop();
           const nombreArchivo = `${Date.now()}_${Math.random().toString(36).substring(7)}.${extension}`;
