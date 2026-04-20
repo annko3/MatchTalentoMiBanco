@@ -37,10 +37,15 @@ function capitalizarPalabras(valor = "") {
 }
 
 function obtenerTextoSeleccionado(id) {
-  const select = document.getElementById(id);
-  if (!select) return "";
-  const option = select.options[select.selectedIndex];
-  return option?.textContent?.trim() || "";
+  const elemento = document.getElementById(id);
+  if (!elemento) return "";
+
+  if ("options" in elemento && elemento.selectedIndex >= 0) {
+    const option = elemento.options[elemento.selectedIndex];
+    return option?.textContent?.trim() || elemento.value || "";
+  }
+
+  return elemento.value?.trim() || "";
 }
 
 async function sincronizarPerfilCV(userId, formacionesGuardadas, experienciasGuardadas) {
@@ -600,7 +605,7 @@ window.registrarUsuario = async function () {
   const email = document.getElementById("inputEmail2").value;
   const password = document.getElementById("inputPassword").value;
   const confirmPassword = document.getElementById("inputConfirmPassword").value;
-  const departamento = obtenerTextoSeleccionado("selectDepartamento");
+  const departamento = document.getElementById("inputDepartamentoFijo")?.value?.trim() || obtenerTextoSeleccionado("selectDepartamento");
   const distrito = obtenerTextoSeleccionado("selectDistrito");
   const birthDate = document.getElementById("inputBirthDate").value;
   const idType = document.getElementById("inputIdType").value;
