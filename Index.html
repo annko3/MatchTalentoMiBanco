@@ -7,275 +7,189 @@
   <title>Match Talento Mibanco</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="./js/tailwind.js"></script>
+  <link rel="stylesheet" href="./carrusel3D.css">
 </head>
 
 <body class="bg-mi-verde font-sans">
+  <div id="navbar-placeholder"></div>
+
   <main>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
-    <!--Navbar-->
-
-    <div id="navbar-placeholder"></div>
-
-    <!--Bienvenida y carrusel-->
-
-    <section class="py-16 px-4 overflow-hidden">
-      <h1 class="text-mi-amarillo text-4xl md:text-5xl font-helvetica text-center mb-3">
-        BIENVENIDA A <br> MATCH TALENTO MIBANCO
-      </h1>
-
-      <p class="text-white text-center mb-12 font-helvetica">Revisa nuestras vacantes disponibles</p>
-
-      <div class="swiper mySwiper w-full max-w-3xl mx-auto py-10">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide w-[300px] bg-white p-6 rounded-lg shadow-2xl border-y-8 border-mi-amarillo">
-            <img src="./img/mibanco-g.jpg" class="bg-mi-verde h-96 w-full object-cover rounded-lg">
-          </div>
-
-          <div class="swiper-slide w-[300px] bg-white p-6 rounded-lg shadow-2xl border-y-8 border-mi-amarillo">
-            <img src="./img/mi-banco-mujer.jpg" class="bg-mi-verde h-96 w-full object-cover rounded-lg">
-          </div>
-
-          <div class="swiper-slide w-[300px] bg-white p-6 rounded-lg shadow-2xl border-y-8 border-mi-amarillo">
-            <img src="./img/mujer-mibanco.png" class="bg-mi-verde h-96 w-full object-cover rounded-lg">
-          </div>
-
-        </div>
-        <div class="swiper-pagination !bottom-0"></div>
-      </div>
-
-      
-      <div class="flex justify-center mt-12">
-        <!--Botón ver más
-        <button
-          class="bg-mi-amarillo text-mi-verde px-12 py-3 rounded-full font-bold shadow-lg hover:scale-105 transition-transform">
-          Ver más
-        </button>-->
-      </div>
-    </section>
-
-    <!--Linea amarilla y galería con historia-->
-
-    <div id="panel" class="h-9 bg-mi-amarillo w-full shadow-inner"></div>
-
-    <section class="bg-mi-verde py-20 px-6 overflow-hidden">
-      <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
-
-        <div class="w-full lg:w-1/2 flex flex-col items-center">
-
-          <ul class="flex list-none p-0 m-0">
-            <li class="m-1">
-              <div
-                class="w-[140px] h-[170px] bg-mi-naranja [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)] flex items-center justify-center shadow-lg">
-                <span class="text-white font-bold text-xs">ACTITUD</span>
-              </div>
-            </li>
-            <li class="m-1">
-              <div
-                class="w-[140px] h-[170px] bg-white [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)] flex items-center justify-center shadow-lg">
-                <span class="text-mi-verde font-bold text-xs text-center">PERSEVERANCIA</span>
-              </div>
-            </li>
-          </ul>
-
-          <ul class="flex list-none p-0 mt-[-45px]">
-            <li class="m-1">
-              <div
-                class="w-[140px] h-[170px] bg-mi-amarillo [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)] flex items-center justify-center shadow-lg">
-                <span class="text-mi-verde font-bold text-xs">ESFUERZO</span>
-              </div>
-            </li>
-            <li class="m-1">
-              <div
-                class="w-[140px] h-[170px] bg-white [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)] flex items-center justify-center shadow-2xl z-10">
-                <span class="text-mi-naranja font-black text-xs font-helvetica text-center">MATCH <BR> TALENTO</span>
-              </div>
-            </li>
-            <li class="m-1">
-              <div
-                class="w-[140px] h-[170px] bg-mi-amarillo [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)] flex items-center justify-center shadow-lg">
-                <span class="text-mi-verde font-bold text-xs">RESILIENCIA</span>
-              </div>
-            </li>
-          </ul>
-
-          <ul class="flex list-none p-0 mt-[-45px]">
-            <li class="m-1">
-              <div
-                class="w-[140px] h-[170px] bg-white [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)] flex items-center justify-center shadow-lg">
-                <span class="text-mi-verde font-bold text-xs">COMPROMISO</span>
-              </div>
-            </li>
-            <li class="m-1">
-              <div
-                class="w-[140px] h-[170px] bg-mi-naranja [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)] flex items-center justify-center shadow-lg">
-                <span class="text-white font-bold text-xs text-center">DEDICACIÓN</span>
-              </div>
-            </li>
-          </ul>
-
-        </div>
-
-        <div class="w-full lg:w-1/2 flex justify-center lg:justify-end">
-          <div
-            class="w-[320px] h-[320px] md:w-[450px] md:h-[450px] bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex flex-col justify-center items-center text-center p-12 text-white shadow-2xl">
-            <h2 class="text-3xl font-playful mb-6 uppercase">MATCH TALENTO <br> MIBANCO</h2>
-            <p class="text-sm leading-relaxed opacity-90">
-              En Mibanco albergamos más de 10k corazones verdes comprometidos con transformar la
-              vida de miles de emprendedores.
-              Hoy, tenemos un nuevo objetivo: sumar a más mujeres a nuestra fuerza laboral.
-              Así nace Match Talento Mibanco, un espacio para encontrarte y construir juntos
-              tu propia historia de progreso.
-            </p>
-            <div class="mt-8 w-12 h-1 bg-mi-amarillo rounded-full"></div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-
-
-    <!--CARDS HISTORIAS DE ÉXITO-->
-
-    <div class="h-9 bg-white w-full shadow-inner"></div>
-
-    <section class="bg-mi-amarillo/20 py-20 px-6">
-      <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-12">
-          <p class="text-mi-amarillo text-xs font-black uppercase tracking-[0.35em]">Impacto real</p>
-          <h2 class="text-mi-amarillo text-3xl md:text-5xl font-helvetica uppercase tracking-tight mt-3">
-            Historias de exito
-          </h2>
-          <p class="text-white text-sm md:text-lg mt-4 max-w-3xl mx-auto">
-            Mujeres que encontraron una oportunidad, crecieron en Mibanco y hoy inspiran a otras a dar el siguiente paso.
+    <section class="hero-grid overflow-hidden px-4 md:px-8 lg:px-10 pt-10 md:pt-14 pb-20">
+      <div class="max-w-7xl mx-auto grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
+        <div class="text-white">
+          <p class="text-mi-amarillo text-xs md:text-sm font-black uppercase tracking-[0.45em] mb-5">
+            Bienvenida
           </p>
+          <h1 class="text-4xl sm:text-5xl lg:text-7xl font-helvetica leading-[0.95] uppercase">
+            Match Talento
+            <span class="block text-mi-amarillo">Mibanco</span>
+          </h1>
+          <p class="mt-6 max-w-2xl text-base md:text-lg text-white/85 leading-relaxed">
+            En Mibanco albergamos más de 10k corazones verdes comprometidos con transformar la vida de miles de
+            emprendedores. Hoy, tenemos un nuevo objetivo: sumar a más mujeres a nuestra fuerza laboral. Así nace Match
+            Talento Mibanco, un espacio para encontrarte y construir juntos tu propia historia de progreso.
+          </p>
+          <div class="mt-8 flex flex-col sm:flex-row gap-4">
+            <a href="#historias"
+              class="inline-flex items-center justify-center px-7 py-4 rounded-full border border-white/20 text-white font-black uppercase text-sm backdrop-blur hover:bg-white/10 transition">
+              Historias de exito
+            </a>
+          </div>
         </div>
 
-        <div class="swiper historias-swiper">
-          <div class="swiper-wrapper" id="historias-slider-wrapper"></div>
-          
-          <div class="swiper-pagination !relative !mt-8"></div>
+        <div class="carousel-stage">
+          <div id="inicio-carousel" class="carousel-shell" aria-label="Galeria de mujeres en Mibanco">
+            <article class="carousel-item">
+              <img src="./img/mibanco-g.jpg" alt="Equipo Mibanco en campo">
+              <div class="carousel-caption">
+                <p class="text-xs uppercase tracking-[0.3em] text-mi-amarillo font-black">Trabajo con impacto</p>
+                <h3 class="font-black text-lg md:text-xl mt-2">Acompañamos a miles de emprendedoras</h3>
+              </div>
+            </article>
+            <article class="carousel-item">
+              <img src="./img/mi-banco-mujer.jpg" alt="Colaboradora de Mibanco">
+              <div class="carousel-caption">
+                <p class="text-xs uppercase tracking-[0.3em] text-mi-amarillo font-black">Cercania</p>
+                <h3 class="font-black text-lg md:text-xl mt-2">Cada agencia es una oportunidad de crecer</h3>
+              </div>
+            </article>
+            <article class="carousel-item">
+              <img src="./img/mujer-mibanco.png" alt="Mujer Mibanco">
+              <div class="carousel-caption">
+                <p class="text-xs uppercase tracking-[0.3em] text-mi-amarillo font-black">Talento femenino</p>
+                <h3 class="font-black text-lg md:text-xl mt-2">Más mujeres construyendo liderazgo</h3>
+              </div>
+            </article>
+            <article class="carousel-item">
+              <img src="./img/mujer_tec_1.jpg" alt="Mujer trabajando con tecnologia">
+              <div class="carousel-caption">
+                <p class="text-xs uppercase tracking-[0.3em] text-mi-amarillo font-black">Tecnologia</p>
+                <h3 class="font-black text-lg md:text-xl mt-2">Herramientas que impulsan tu dia a dia</h3>
+              </div>
+            </article>
+            <article class="carousel-item">
+              <img src="./img/mujer_tec_2.jpg" alt="Mujer usando laptop">
+              <div class="carousel-caption">
+                <p class="text-xs uppercase tracking-[0.3em] text-mi-amarillo font-black">Innovacion</p>
+                <h3 class="font-black text-lg md:text-xl mt-2">Procesos más inteligentes</h3>
+              </div>
+            </article>
+            <article class="carousel-item">
+              <img src="./img/mujer_tec_3.jpg" alt="Mujer en entorno laboral">
+              <div class="carousel-caption">
+                <p class="text-xs uppercase tracking-[0.3em] text-mi-amarillo font-black">Comunidad</p>
+                <h3 class="font-black text-lg md:text-xl mt-2">Una red para aprender y destacar</h3>
+              </div>
+            </article>
+          </div>
         </div>
-      
       </div>
-    </section>  <!--HASTA ACÁ MODIFICAR-->
+    </section>
 
-
-
-    <section id="cards" class="bg-mi-verde py-24 px-6 border-t border-white/5">
+    <section id="cards" class="bg-mi-verde py-20 px-6 border-t border-white/5">
       <div class="max-w-7xl mx-auto text-center">
-
         <h2 class="text-mi-amarillo text-3xl md:text-5xl font-helvetica mb-4 uppercase tracking-tight">
-          NUESTROS BENEFICIOS
+          Nuestros beneficios
         </h2>
-        <p class="text-white text-sm md:text-lg mb-20 opacity-80 font-helvetica max-w-3xl mx-auto">
+        <p class="text-white text-sm md:text-lg mb-16 opacity-80 font-helvetica max-w-3xl mx-auto">
           En Mibanco buscamos contribuir con tu <strong>bienestar integral</strong> a través de diferentes beneficios en
           cada aspecto de tu vida.
         </p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 justify-items-center">
-
-          <div
-            class="group relative w-[280px] h-[260px] bg-white rounded-[20px] flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] hover:scale-105 hover:shadow-[0_15px_30px_rgba(255,128,0,0.2)] [perspective:1000px] cursor-pointer">
-            <svg
-              class="w-16 fill-mi-naranja transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] group-hover:scale-0"
-              viewBox="0 0 24 24">
+          <div class="group relative w-[280px] h-[260px] bg-white rounded-[20px] flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer">
+            <svg class="w-16 fill-mi-naranja transition-all duration-500 group-hover:scale-0" viewBox="0 0 24 24">
               <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z" />
             </svg>
-            <div
-              class="absolute inset-0 p-6 bg-white border-b-[10px] border-mi-naranja flex flex-col justify-center text-center [transform-origin:bottom] [transform:rotateX(-90deg)] transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] group-hover:[transform:rotateX(0deg)]">
-              <p class="text-mi-naranja font-black text-2xl uppercase tracking-tighter">Bienestar Físico</p>
+            <div class="absolute inset-0 p-6 bg-white border-b-[10px] border-mi-naranja flex flex-col justify-center text-center [transform-origin:bottom] [transform:rotateX(-90deg)] transition-all duration-500 group-hover:[transform:rotateX(0deg)]">
+              <p class="text-mi-naranja font-black text-2xl uppercase tracking-tighter">Bienestar Fisico</p>
               <ul class="mt-3 text-[15px] font-helvetica text-gray-600 space-y-1 text-left list-disc list-inside">
-                <li>EPS y Seguro médico</li>
+                <li>EPS y seguro medico</li>
                 <li>Plan de salud para padres</li>
-                <li>Campañas de Salud física</li>
+                <li>Campañas de salud fisica</li>
               </ul>
             </div>
           </div>
 
-          <div
-            class="group relative w-[280px] h-[260px] bg-white rounded-[20px] flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] hover:scale-105 hover:shadow-[0_15px_30px_rgba(255,223,0,0.2)] [perspective:1000px] cursor-pointer">
-            <svg
-              class="w-16 fill-mi-verde transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] group-hover:scale-0"
-              viewBox="0 0 24 24">
-              <path
-                d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z" />
+          <div class="group relative w-[280px] h-[260px] bg-white rounded-[20px] flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer">
+            <svg class="w-16 fill-mi-verde transition-all duration-500 group-hover:scale-0" viewBox="0 0 24 24">
+              <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z" />
             </svg>
-            <div
-              class="absolute inset-0 p-6 bg-white border-b-[10px] border-mi-amarillo flex flex-col justify-center text-center [transform-origin:bottom] [transform:rotateX(-90deg)] transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] group-hover:[transform:rotateX(0deg)]">
+            <div class="absolute inset-0 p-6 bg-white border-b-[10px] border-mi-amarillo flex flex-col justify-center text-center [transform-origin:bottom] [transform:rotateX(-90deg)] transition-all duration-500 group-hover:[transform:rotateX(0deg)]">
               <p class="text-mi-verde font-black text-2xl uppercase tracking-tighter">Bienestar Emocional</p>
               <ul class="mt-3 text-[15px] font-helvetica text-gray-600 space-y-1 text-left list-disc list-inside">
-                <li>Acompañamiento psicológico</li>
-                <li>Días libres y flexibilidad</li>
+                <li>Acompañamiento psicologico</li>
+                <li>Dias libres y flexibilidad</li>
                 <li>Cultura de reconocimiento</li>
               </ul>
             </div>
           </div>
 
-          <div
-            class="group relative w-[280px] h-[260px] bg-white rounded-[20px] flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] hover:scale-105 hover:shadow-[0_15px_30px_rgba(255,128,0,0.2)] [perspective:1000px] cursor-pointer">
-            <svg
-              class="w-16 fill-mi-naranja transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] group-hover:scale-0"
-              viewBox="0 0 24 24">
-              <path
-                d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
+          <div class="group relative w-[280px] h-[260px] bg-white rounded-[20px] flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer">
+            <svg class="w-16 fill-mi-naranja transition-all duration-500 group-hover:scale-0" viewBox="0 0 24 24">
+              <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
             </svg>
-            <div
-              class="absolute inset-0 p-6 bg-white border-b-[10px] border-mi-naranja flex flex-col justify-center text-center [transform-origin:bottom] [transform:rotateX(-90deg)] transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] group-hover:[transform:rotateX(0deg)]">
+            <div class="absolute inset-0 p-6 bg-white border-b-[10px] border-mi-naranja flex flex-col justify-center text-center [transform-origin:bottom] [transform:rotateX(-90deg)] transition-all duration-500 group-hover:[transform:rotateX(0deg)]">
               <p class="text-mi-naranja font-black text-2xl uppercase tracking-tighter">Bienestar Financiero</p>
               <ul class="mt-3 text-[15px] font-helvetica text-gray-600 space-y-1 text-left list-disc list-inside">
-                <li>Créditos BCP preferenciales</li>
+                <li>Creditos BCP preferenciales</li>
                 <li>Tipo de cambio especial</li>
-                <li>Depósito a plazo fijo</li>
+                <li>Deposito a plazo fijo</li>
               </ul>
             </div>
           </div>
 
-          <div
-            class="group relative w-[280px] h-[260px] bg-white rounded-[20px] flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] hover:scale-105 hover:shadow-[0_15px_30px_rgba(255,223,0,0.2)] [perspective:1000px] cursor-pointer">
-            <svg
-              class="w-16 fill-mi-verde transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] group-hover:scale-0"
-              viewBox="0 0 24 24">
-              <path
-                d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
+          <div class="group relative w-[280px] h-[260px] bg-white rounded-[20px] flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer">
+            <svg class="w-16 fill-mi-verde transition-all duration-500 group-hover:scale-0" viewBox="0 0 24 24">
+              <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
             </svg>
-            <div
-              class="absolute inset-0 p-6 bg-white border-b-[10px] border-mi-amarillo flex flex-col justify-center text-center [transform-origin:bottom] [transform:rotateX(-90deg)] transition-all duration-500 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] group-hover:[transform:rotateX(0deg)]">
+            <div class="absolute inset-0 p-6 bg-white border-b-[10px] border-mi-amarillo flex flex-col justify-center text-center [transform-origin:bottom] [transform:rotateX(-90deg)] transition-all duration-500 group-hover:[transform:rotateX(0deg)]">
               <p class="text-mi-verde font-black text-2xl uppercase tracking-tighter">Bienestar Laboral</p>
               <ul class="mt-3 text-[15px] font-helvetica text-gray-600 space-y-1 text-left list-disc list-inside">
-                <li>Línea de carrera activa</li>
+                <li>Linea de carrera activa</li>
                 <li>Herramientas de trabajo remoto</li>
                 <li>Descuentos Credicorp</li>
               </ul>
             </div>
           </div>
-
         </div>
-
-        <div class="mt-24 text-center">
-          <button
-            class="group relative overflow-hidden h-14 px-12 rounded-full bg-mi-amarillo text-gray-600 border-none cursor-pointer shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-
-            <a href="./empleos.html"
-              class="relative z-10 font-bold uppercase text-sm tracking-widest transition-colors duration-300 group-hover:text-white">
-              Ver Vacantes
-            </a>
-
-            <div
-              class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-mi-amarillo to-mi-naranja origin-left scale-x-0 transition-transform duration-[475ms] ease-[cubic-bezier(0.475,0.42,0,0.99)] group-hover:scale-x-100">
-            </div>
-
-          </button>
-        </div>
-
       </div>
     </section>
 
+    <section class="bg-white py-20 px-6">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-14">
+          <p class="text-mi-naranja text-xs font-black uppercase tracking-[0.35em]">Vista previa</p>
+          <h2 class="text-mi-verde text-3xl md:text-5xl font-helvetica uppercase tracking-tight mt-3">
+            Explora puestos tech
+          </h2>
+          <p class="text-gray-500 mt-4 max-w-3xl mx-auto">
+            Puestos tech publicados con una vista previa breve. Cada card te lleva a oportunidades para seguir postulando.
+          </p>
+        </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <div id="tech-preview-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"></div>
+      </div>
+    </section>
 
+    <section id="historias" class="py-20 px-6">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+          <p class="text-mi-amarillo text-xs font-black uppercase tracking-[0.35em]">Impacto real</p>
+          <h2 class="text-white text-3xl md:text-5xl font-helvetica uppercase tracking-tight mt-3">
+            Historias de exito
+          </h2>
+          <p class="text-white/80 mt-4 max-w-3xl mx-auto">
+            Mujeres que encontraron una oportunidad, crecieron en Mibanco y hoy inspiran a otras a dar el siguiente paso.
+          </p>
+        </div>
+
+        <div id="historias-exito-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+      </div>
+    </section>
   </main>
+
+  <div id="footer-placeholder"></div>
 
   <script type="module" src="./js/inicio.js"></script>
   <script type="module" src="./js/main.js"></script>

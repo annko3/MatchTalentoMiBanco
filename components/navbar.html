@@ -1,18 +1,37 @@
 <nav class="bg-white shadow-sm sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between h-20 items-center">
-      <div class="flex items-center gap-10">
-        <a href="../index.html">
+    <div class="flex justify-between h-20 items-center gap-4">
+      <div class="flex items-center gap-4 lg:gap-10">
+        <a id="nav-logo-link" href="#">
           <img src="../img/logo.png" alt="Mibanco" class="h-10 w-auto" onerror="this.src='/img/logo.png'">
         </a>
-        <div id="nav-links" class="hidden md:flex space-x-8">
-            <a href="../index.html" class="text-gray-600 font-bold hover:text-mi-verde transition font-helvetica">Inicio</a>
-            <a href="../empleos.html" class="text-gray-600 font-bold hover:text-mi-verde transition font-helvetica">Oportunidades</a>
+
+        <div id="nav-links" class="hidden md:flex items-center space-x-8">
+          <a id="nav-link-inicio" href="#" class="text-gray-600 font-bold hover:text-mi-verde transition font-helvetica">Inicio</a>
+          <a id="nav-link-oportunidades" href="#" class="text-gray-600 font-bold hover:text-mi-verde transition font-helvetica">Oportunidades</a>
         </div>
       </div>
 
-      <div id="nav-actions" class="flex items-center">
-          </div>
+      <div class="hidden md:flex items-center" id="nav-actions"></div>
+
+      <button id="mobile-menu-button" type="button"
+        class="md:hidden inline-flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-mi-verde">
+        <i class='bx bx-menu text-2xl'></i>
+      </button>
+    </div>
+
+    <div id="mobile-menu" class="md:hidden hidden pb-5">
+      <div class="rounded-3xl border border-gray-100 bg-white p-4 shadow-lg space-y-3">
+        <a id="nav-mobile-inicio" href="#"
+          class="block px-4 py-3 rounded-2xl text-gray-700 font-bold hover:bg-gray-50 hover:text-mi-verde transition">
+          Inicio
+        </a>
+        <a id="nav-mobile-oportunidades" href="#"
+          class="block px-4 py-3 rounded-2xl text-gray-700 font-bold hover:bg-gray-50 hover:text-mi-verde transition">
+          Oportunidades
+        </a>
+        <div id="nav-actions-mobile" class="pt-3 border-t border-gray-100 space-y-3"></div>
+      </div>
     </div>
   </div>
 </nav>

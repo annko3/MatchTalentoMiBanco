@@ -1,67 +1,129 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Ingresar | Match Talento</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-		<script src="./js/tailwind.js"></script>
-</head>
-<body class="bg-mi-verde h-screen flex items-center justify-center">
-    <div class="bg-white p-10 rounded-3xl shadow-xl w-full max-w-md border border-gray-100">
-        <div class="text-center mb-8">
-            <img src="./img/logo.png" alt="Mibanco" class="h-12 mx-auto mb-4">
-            <h2 class="text-2xl font-bold text-gray-800">¡Bienvenida de nuevo!</h2>
-            <p class="text-gray-500">Ingresa para continuar con tu proceso.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ingreso - Match Talento</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/userRegistration.css" />
+  </head>
+  <body>
+    <main class="min-vh-100 d-flex align-items-center justify-content-center px-3 py-5">
+      <div class="col-12 col-md-10 col-lg-8 col-xl-7">
+        <div class="row g-0 rounded-5 overflow-hidden shadow-lg">
+          <section class="col-lg-5 bg-verde text-white p-5 d-flex flex-column justify-content-between">
+            <div>
+              <img src="./img/logo.png" alt="Mibanco" class="img-fluid mb-4" style="max-width: 170px;" />
+              <p class="text-uppercase fw-bold small mb-3" style="letter-spacing: 0.3em;">Bienvenida</p>
+              <h1 class="fw-bold mb-4" style="font-size: clamp(2rem, 4vw, 3rem); line-height: 0.95;">
+                Match Talento
+                <span class="d-block text-warning">Mibanco</span>
+              </h1>
+              <p class="mb-0 text-white-50">
+                Ingresa para seguir tu camino en oportunidades con impacto real y revisar tus postulaciones tech.
+              </p>
+            </div>
+
+            <div class="mt-5 pt-4 border-top border-light border-opacity-25">
+              <p class="mb-2 fw-bold">Tu siguiente paso puede empezar hoy.</p>
+              <p class="mb-0 text-white-50 small">
+                Mantente cerca de nuevas vacantes, tu CV y el avance de tu perfil.
+              </p>
+            </div>
+          </section>
+
+          <section class="col-lg-7 bg-amarillo p-4 p-md-5">
+            <div class="bg-white rounded-5 p-4 p-md-5 h-100">
+              <div class="text-center mb-4">
+                <p class="text-uppercase fw-bold small text-muted mb-2" style="letter-spacing: 0.3em;">Ingreso</p>
+                <h2 class="fw-bold text-dark mb-2">Que bueno verte otra vez</h2>
+                <p class="text-secondary mb-0">Ingresa con tu correo para continuar con tu proceso.</p>
+              </div>
+
+              <form id="login-form" class="d-grid gap-4">
+                <div>
+                  <label for="email" class="form-label fw-semibold">Correo electronico</label>
+                  <input
+                    type="email"
+                    id="email"
+                    class="form-control py-3 rounded-4 border-0 bg-light"
+                    placeholder="tucorreo@ejemplo.com"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label for="password" class="form-label fw-semibold">Contrasena</label>
+                  <input
+                    type="password"
+                    id="password"
+                    class="form-control py-3 rounded-4 border-0 bg-light"
+                    placeholder="Ingresa tu contrasena"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  class="btn-rojo fw-bold rounded-5 py-3 bg-rojo text-white border-0"
+                >
+                  Iniciar sesion
+                </button>
+              </form>
+
+              <div class="d-flex align-items-center justify-content-center my-4">
+                <div class="flex-grow-1 border-bottom border-dark border-opacity-10"></div>
+                <span class="mx-3 text-muted small">o</span>
+                <div class="flex-grow-1 border-bottom border-dark border-opacity-10"></div>
+              </div>
+
+              <p class="mb-0 text-center">
+                Aun no tienes una cuenta?
+                <a href="./userRegistration.html" class="text-rojo fw-bold text-decoration-none">
+                  Registrate aqui
+                </a>
+              </p>
+            </div>
+          </section>
         </div>
-
-        <form id="login-form" class="space-y-6">
-            <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Correo electrónico</label>
-                <input type="email" id="email" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-mi-verde outline-none" required>
-            </div>
-            <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">Contraseña</label>
-                <input type="password" id="password" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-mi-verde outline-none" required>
-            </div>
-            <button type="submit" class="w-full bg-mi-verde text-white py-4 rounded-xl font-bold text-lg hover:bg-green-800 transition shadow-lg">
-                Iniciar Sesión
-            </button>
-        </form>
-
-        <p class="text-center mt-8 text-gray-600">
-            ¿No tienes cuenta? <a href="userRegistration.html" class="text-mi-naranja font-bold">Regístrate aquí</a>
-        </p>
-    </div>
+      </div>
+    </main>
 
     <script type="module">
-        import { auth, db, signInWithEmailAndPassword, doc, getDoc } from './assets/firebase/config.js';
+      import { auth, db, signInWithEmailAndPassword, doc, getDoc } from './assets/firebase/config.js';
 
-        const loginForm = document.getElementById('login-form');
+      const loginForm = document.getElementById('login-form');
 
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-            try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
 
-                // REVISAR ROL EN FIRESTORE
-                const userSnap = await getDoc(doc(db, "users", user.uid));
-                
-                if (userSnap.exists()) {
-                    const rol = userSnap.data().rol;
-                    if (rol === 'admin') {
-                        window.location.href = './admin/vacantes.html';
-                    } else {
-                        window.location.href = 'empleos.html';
-                    }
-                }
-            } catch (error) {
-                alert("Error: Usuario o contraseña incorrectos.");
+        try {
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          const user = userCredential.user;
+          const userSnap = await getDoc(doc(db, "users", user.uid));
+
+          if (userSnap.exists()) {
+            const rol = userSnap.data().rol;
+            if (rol === 'admin') {
+              window.location.href = './admin/vacantes.html';
+            } else {
+              window.location.href = './empleos.html';
             }
-        });
+            return;
+          }
+
+          window.location.href = './empleos.html';
+        } catch (error) {
+          alert('Error: usuario o contrasena incorrectos.');
+        }
+      });
     </script>
-</body>
+  </body>
 </html>

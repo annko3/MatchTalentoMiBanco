@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vacantes | Admin Mibanco</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -10,46 +11,44 @@
 </head>
 
 <body class="bg-slate-100 flex min-h-screen">
-
-  <!--  SIDEBAR DINÁMICO -->
   <div id="sidebar-placeholder"></div>
 
-  <!-- CONTENIDO -->
-  <main class="ml-72 flex-1 p-10">
+  <main class="ml-0 lg:ml-72 flex-1 p-4 md:p-8 lg:p-10">
     <div class="flex justify-end mb-4">
       <button onclick="window.location.href='crear-vacante.html'"
-        class="bg-mi-rojo text-white px-6 py-2 rounded-lg font-bold flex items-center gap-2 shadow-md">
+        class="bg-mi-rojo text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 shadow-md">
         Add <i class='bx bx-plus-circle text-2xl'></i>
       </button>
     </div>
 
-    <div class="bg-[#f2f2f2] p-8 rounded-xl shadow-lg border border-gray-200">
+    <div class="bg-[#f2f2f2] p-6 md:p-8 rounded-xl shadow-lg border border-gray-200">
       <div class="bg-mi-verde text-white text-center py-3 rounded-t-xl font-bold text-xl mb-4">
         Lista de puestos de trabajo
       </div>
 
-      <table class="w-full text-center border-separate border-spacing-y-2">
-        <thead>
-          <tr class="bg-mi-amarillo text-gray-800 font-bold uppercase text-sm">
-            <th class="py-4 rounded-l-lg border-r border-gray-300">Puesto</th>
-            <th class="py-4 border-r border-gray-300">Requisitos</th>
-            <th class="py-4 border-r border-gray-300">Fecha inicio</th>
-            <th class="py-4 border-r border-gray-300">Fecha fin</th>
-            <th class="py-4 rounded-r-lg">More</th>
-          </tr>
-        </thead>
-        <tbody id="tabla-vacantes"></tbody>
-      </table>
+      <div class="overflow-x-auto">
+        <table class="w-full text-center border-separate border-spacing-y-2 min-w-[900px]">
+          <thead>
+            <tr class="bg-mi-amarillo text-gray-800 font-bold uppercase text-sm">
+              <th class="py-4 rounded-l-lg border-r border-gray-300">Puesto</th>
+              <th class="py-4 border-r border-gray-300">Requisitos</th>
+              <th class="py-4 border-r border-gray-300">Fecha inicio</th>
+              <th class="py-4 border-r border-gray-300">Fecha fin</th>
+              <th class="py-4 rounded-r-lg">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-vacantes"></tbody>
+        </table>
+      </div>
     </div>
   </main>
 
   <script type="module">
     import { cargarSidebarAdmin } from '../js/main.js';
     import { auth, db } from '../assets/firebase/config.js';
-    import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { doc, getDoc, collection, getDocs, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    /* SIDEBAR */
     await cargarSidebarAdmin();
 
     auth.onAuthStateChanged(async (user) => {
@@ -68,7 +67,6 @@
           }
         }
 
-        // Logout del sidebar dinámico
         document.getElementById('btn-logout')
           .addEventListener('click', () => signOut(auth));
 
@@ -77,7 +75,6 @@
       }
     });
 
-    /* VACANTES */
     async function cargar() {
       const snap = await getDocs(collection(db, "vacantes"));
       const tbody = document.getElementById('tabla-vacantes');
@@ -88,7 +85,7 @@
 
         tbody.innerHTML += `
           <tr class="bg-white shadow-sm hover:scale-[1.01] transition-transform">
-            <td class="py-4 font-bold italic border-r border-gray-100">${v.titulo}</td>
+            <td class="py-4 font-bold border-r border-gray-100">${v.titulo}</td>
             <td class="py-4 border-r border-gray-100 text-xs">
               ${v.requisitos ? v.requisitos.slice(0, 2).join(', ') : 'Varios'}
             </td>
@@ -99,12 +96,30 @@
               ${v.fechaFin?.toDate().toLocaleDateString() || '-'}
             </td>
             <td class="py-4">
-              <i onclick="window.location.href='detalle-vacante.html?id=${docSnap.id}'"
-                class='bx bxs-plus-square text-mi-naranja text-3xl cursor-pointer'></i>
+              <div class="flex items-center justify-center gap-3">
+                <button onclick="window.location.href='crear-vacante.html?id=${docSnap.id}'"
+                  class="px-4 py-2 rounded-full bg-mi-verde text-white text-xs font-black uppercase hover:bg-green-800 transition">
+                  Editar
+                </button>
+                <button onclick="eliminarVacante('${docSnap.id}', '${(v.titulo || 'esta vacante').replace(/'/g, "\\'")}')"
+                  class="w-10 h-10 rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition text-xl">
+                  <i class='bx bxs-trash'></i>
+                </button>
+              </div>
             </td>
           </tr>`;
       });
     }
+
+    window.eliminarVacante = async (idVacante, titulo) => {
+      const confirmar = confirm(`¿Deseas eliminar "${titulo}"? Esta acción también borrará sus postulaciones asociadas.`);
+      if (!confirmar) return;
+
+      const postulacionesRelacionadas = await getDocs(query(collection(db, "postulaciones"), where("idVacante", "==", idVacante)));
+      await Promise.all(postulacionesRelacionadas.docs.map((postulacion) => deleteDoc(doc(db, "postulaciones", postulacion.id))));
+      await deleteDoc(doc(db, "vacantes", idVacante));
+      await cargar();
+    };
 
     cargar();
   </script>

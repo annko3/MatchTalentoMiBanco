@@ -3,70 +3,57 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Publicar Empleo | Mibanco</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Vacante | Mibanco</title>
 	<script src="https://cdn.tailwindcss.com"></script>
 	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 	<script src="/js/tailwind.js"></script>
 </head>
 
 <body class="bg-slate-50 flex min-h-screen">
-
-	<!-- SIDEBAR-->
 	<div id="sidebar-placeholder"></div>
 
-	<main class="ml-72 flex-1 p-10">
+	<main class="ml-0 lg:ml-72 flex-1 p-4 md:p-8 lg:p-10">
 		<div class="max-w-4xl mx-auto">
-
 			<div class="flex items-center justify-between mb-8">
-				<h1 class="text-3xl font-bold text-gray-800 font-helvetica">Nueva Vacante</h1>
+				<h1 id="titulo-formulario" class="text-3xl font-bold text-gray-800 font-helvetica">Nueva Vacante</h1>
 				<a href="vacantes.html" class="text-gray-400 hover:text-mi-verde">
 					<i class='bx bx-arrow-back'></i> Volver
 				</a>
 			</div>
 
-			<form id="form-vacante" class="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 grid grid-cols-2 gap-6">
-
-				<div class="col-span-2">
-					<label class="block text-sm font-bold text-gray-700 mb-2 font-helvetica">
-						Título del puesto *
-					</label>
+			<form id="form-vacante" class="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-6">
+				<div class="md:col-span-2">
+					<label class="block text-sm font-bold text-gray-700 mb-2 font-helvetica">Titulo del puesto *</label>
 					<input type="text" id="titulo"
 						class="w-full bg-gray-50 border-none p-4 rounded-2xl focus:ring-2 focus:ring-mi-verde outline-none"
-						placeholder="Ej. Analista de Créditos Junior" required>
+						placeholder="Ej. Analista de Creditos Junior" required>
 				</div>
 
 				<div>
-					<label class="block text-sm font-bold text-gray-700 mb-2 font-helvetica">
-						Modalidad *
-					</label>
+					<label class="block text-sm font-bold text-gray-700 mb-2 font-helvetica">Modalidad *</label>
 					<select id="modalidad" class="w-full bg-gray-50 border-none p-4 rounded-2xl outline-none">
 						<option value="Presencial">Presencial</option>
 						<option value="Remoto">Remoto</option>
-						<option value="Híbrido">Híbrido</option>
+						<option value="Hibrido">Hibrido</option>
 					</select>
 				</div>
 
-				<div class="col-span-2 grid grid-cols-2 gap-6">
-					<div>
-						<label class="block text-sm font-bold text-gray-700 mb-2 font-helvetica">
-							Distrito (presencial/híbrido)
-						</label>
-						<select id="distrito" class="w-full bg-gray-50 border-none p-4 rounded-2xl outline-none">
-							<option value="Lima">Cercado de Lima</option>
-							<option value="Miraflores">Miraflores</option>
-							<option value="San Isidro">San Isidro</option>
-							<option value="Los Olivos">Santiago de Surco</option>
-							<option value="San Juan de Lurigancho">La Victoria</option>
-						</select>
-					</div>
+				<div>
+					<label class="block text-sm font-bold text-gray-700 mb-2 font-helvetica">Distrito</label>
+					<select id="distrito" class="w-full bg-gray-50 border-none p-4 rounded-2xl outline-none">
+						<option value="Cercado de Lima">Cercado de Lima</option>
+						<option value="Miraflores">Miraflores</option>
+						<option value="San Isidro">San Isidro</option>
+						<option value="Santiago de Surco">Santiago de Surco</option>
+						<option value="La Victoria">La Victoria</option>
+					</select>
+				</div>
 
-					<div>
-						<label class="block text-sm font-bold text-gray-700 mb-2 font-helvetica">
-							Experiencia requerida (meses)
-						</label>
-						<input type="number" id="experiencia" class="w-full bg-gray-50 border-none p-4 rounded-2xl outline-none"
-							placeholder="Ej. 6" value="0">
-					</div>
+				<div>
+					<label class="block text-sm font-bold text-gray-700 mb-2 font-helvetica">Experiencia requerida (meses)</label>
+					<input type="number" id="experiencia" class="w-full bg-gray-50 border-none p-4 rounded-2xl outline-none"
+						placeholder="Ej. 6" value="0" min="0">
 				</div>
 
 				<div class="grid grid-cols-2 gap-6">
@@ -84,27 +71,22 @@
 					</div>
 				</div>
 
-				<div class="col-span-2">
-					<label class="block text-sm font-bold text-gray-700 mb-2 font-helvetica">
-						Descripción detallada
-					</label>
+				<div class="md:col-span-2">
+					<label class="block text-sm font-bold text-gray-700 mb-2 font-helvetica">Descripcion detallada</label>
 					<textarea id="descripcion" class="w-full bg-gray-50 border-none p-4 rounded-2xl outline-none h-32"
 						placeholder="Describe las responsabilidades..."></textarea>
 				</div>
 
-				<div class="col-span-2">
-					<label class="block text-sm font-bold text-gray-700 mb-2 font-helvetica">
-						Requisitos (separados por comas)
-					</label>
+				<div class="md:col-span-2">
+					<label class="block text-sm font-bold text-gray-700 mb-2 font-helvetica">Requisitos (separados por comas)</label>
 					<input type="text" id="requisitos" class="w-full bg-gray-50 border-none p-4 rounded-2xl outline-none"
-						placeholder="Excel, Atención al cliente, Contabilidad">
+						placeholder="Excel, Atencion al cliente, Contabilidad">
 				</div>
 
-				<button type="submit"
-					class="col-span-2 bg-mi-verde text-white py-4 rounded-2xl font-bold text-lg shadow-lg hover:bg-green-700 transition">
+				<button id="btn-submit" type="submit"
+					class="md:col-span-2 bg-mi-verde text-white py-4 rounded-2xl font-bold text-lg shadow-lg hover:bg-green-700 transition">
 					Publicar ahora en Mibanco
 				</button>
-
 			</form>
 		</div>
 	</main>
@@ -112,11 +94,14 @@
 	<script type="module">
 		import { cargarSidebarAdmin } from '../js/main.js';
 		import { auth, db } from '../assets/firebase/config.js';
-		import { doc, getDoc, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+		import { doc, getDoc, collection, addDoc, updateDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 		import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-		/* sidebar */
 		await cargarSidebarAdmin();
+
+		const params = new URLSearchParams(window.location.search);
+		const idVacante = params.get('id');
+		const esEdicion = Boolean(idVacante);
 
 		auth.onAuthStateChanged(async (user) => {
 			if (user) {
@@ -137,39 +122,72 @@
 				document.getElementById('btn-logout')
 					.addEventListener('click', () => signOut(auth));
 
+				if (esEdicion) {
+					await cargarVacanteExistente();
+				}
 			} else {
 				window.location.href = '../index.html';
 			}
 		});
 
-		/* CREAR VACANTE */
-		document.getElementById('form-vacante')
-			.addEventListener('submit', async (e) => {
+		function toInputDate(timestamp) {
+			if (!timestamp?.toDate) return "";
+			return timestamp.toDate().toISOString().split("T")[0];
+		}
 
-				e.preventDefault();
+		async function cargarVacanteExistente() {
+			const snap = await getDoc(doc(db, "vacantes", idVacante));
+			if (!snap.exists()) return;
 
-				// Dentro del evento submit
-				const datos = {
-					titulo: document.getElementById('titulo').value,
-					modalidad: document.getElementById('modalidad').value,
-					distrito: document.getElementById('distrito').value, // Nuevo campo
-					experiencia: parseInt(document.getElementById('experiencia').value), // Nuevo campo
-					descripcion: document.getElementById('descripcion').value,
-					requisitos: document.getElementById('requisitos').value.split(','),
-					fechaInicio: Timestamp.fromDate(new Date(document.getElementById('fechaInicio').value + "T00:00:00")),
-					fechaFin: Timestamp.fromDate(new Date(document.getElementById('fechaFin').value + "T23:59:59")),
-					estado: "abierta",
-					fechaPublicacion: Timestamp.now()
-				};
+			const vacante = snap.data();
+			document.getElementById("titulo-formulario").innerText = "Editar Vacante";
+			document.getElementById("btn-submit").innerText = "Guardar cambios";
+			document.getElementById("titulo").value = vacante.titulo || "";
+			document.getElementById("modalidad").value = vacante.modalidad || "Presencial";
+			document.getElementById("distrito").value = vacante.distrito || "Cercado de Lima";
+			document.getElementById("experiencia").value = vacante.experiencia || 0;
+			document.getElementById("fechaInicio").value = toInputDate(vacante.fechaInicio);
+			document.getElementById("fechaFin").value = toInputDate(vacante.fechaFin);
+			document.getElementById("descripcion").value = vacante.descripcion || "";
+			document.getElementById("requisitos").value = (vacante.requisitos || []).join(', ');
+		}
 
-				try {
-					await addDoc(collection(db, "vacantes"), datos);
-					alert("¡Vacante publicada! Ya es visible para las candidatas.");
-					window.location.href = "vacantes.html";
-				} catch (error) {
-					console.error("Error al guardar:", error);
+		document.getElementById('form-vacante').addEventListener('submit', async (e) => {
+			e.preventDefault();
+
+			const datos = {
+				titulo: document.getElementById('titulo').value,
+				modalidad: document.getElementById('modalidad').value,
+				distrito: document.getElementById('distrito').value,
+				experiencia: parseInt(document.getElementById('experiencia').value || "0", 10),
+				descripcion: document.getElementById('descripcion').value,
+				requisitos: document.getElementById('requisitos').value
+					.split(',')
+					.map((item) => item.trim())
+					.filter(Boolean),
+				fechaInicio: Timestamp.fromDate(new Date(document.getElementById('fechaInicio').value + "T00:00:00")),
+				fechaFin: Timestamp.fromDate(new Date(document.getElementById('fechaFin').value + "T23:59:59")),
+				estado: "abierta"
+			};
+
+			try {
+				if (esEdicion) {
+					await updateDoc(doc(db, "vacantes", idVacante), datos);
+					alert("Vacante actualizada correctamente.");
+				} else {
+					await addDoc(collection(db, "vacantes"), {
+						...datos,
+						fechaPublicacion: Timestamp.now()
+					});
+					alert("Vacante publicada. Ya es visible para las candidatas.");
 				}
-			});
+
+				window.location.href = "vacantes.html";
+			} catch (error) {
+				console.error("Error al guardar:", error);
+				alert("No se pudo guardar la vacante.");
+			}
+		});
 	</script>
 
 </body>

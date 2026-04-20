@@ -1,0 +1,66 @@
+.hero-grid {
+  background:
+    radial-gradient(circle at top left, rgba(255, 223, 0, 0.24), transparent 25%),
+    radial-gradient(circle at bottom right, rgba(79, 179, 232, 0.18), transparent 24%),
+    linear-gradient(135deg, #0f3a1b 0%, #0a7a33 48%, #0d5421 100%);
+}
+
+.carousel-stage {
+  perspective: 1400px;
+  perspective-origin: center;
+}
+
+.carousel-shell {
+  position: relative;
+  width: min(62vw, 240px);
+  height: min(82vw, 340px);
+  margin: 0 auto;
+  transform-style: preserve-3d;
+  cursor: grab;
+  user-select: none;
+}
+
+.carousel-shell.is-dragging {
+  cursor: grabbing;
+}
+
+.carousel-item {
+  position: absolute;
+  inset: 0;
+  border-radius: 26px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.26);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #0f3a1b;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.04);
+}
+
+.carousel-caption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 0.95rem 1rem 1.1rem;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
+  color: white;
+}
+
+@media (max-width: 1024px) {
+  .carousel-shell {
+    width: min(70vw, 300px);
+    height: min(96vw, 360px);
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-shell {
+    width: min(76vw, 270px);
+    height: min(104vw, 320px);
+  }
+}
