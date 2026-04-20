@@ -13,9 +13,9 @@
 <body class="bg-gray-50 flex flex-col min-h-screen">
   <div id="navbar-placeholder"></div>
 
-  <main class="flex-grow">
+  <main class="flex-grow bg-mi-verde">
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+      <div class="bg-mi-amarillo p-8 rounded-2xl shadow-sm border-0">
         <h2 class="text-xl font-bold text-gray-800 mb-6 font-helvetica">Filtrar empleos</h2>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div>
@@ -65,7 +65,7 @@
       <div class="bg-white w-full rounded-3xl shadow-2xl overflow-hidden">
         <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
           <div>
-            <p id="modal-vacante-tag" class="text-[11px] font-black uppercase text-mi-naranja mb-1"></p>
+            <p id="modal-vacante-tag" class="text-[11px] font-black uppercase text-mi-celeste mb-1"></p>
             <h3 id="modal-vacante-titulo" class="text-2xl font-bold text-gray-800 font-helvetica"></h3>
           </div>
           <button onclick="cerrarDetalleVacante()" class="text-gray-400 hover:text-gray-700 text-3xl leading-none">&times;</button>
@@ -104,7 +104,7 @@
           <button onclick="cerrarDetalleVacante()" class="px-6 py-3 rounded-xl font-bold text-gray-500 hover:text-gray-700">
             Cerrar
           </button>
-          <button id="btn-confirmar-postulacion" class="bg-mi-verde text-white px-6 py-3 rounded-xl font-bold hover:bg-green-800 transition shadow-lg">
+          <button id="btn-confirmar-postulacion" class="bg-mi-amarillo text-gray-800 px-6 py-3 rounded-xl font-bold hover:bg-amarillo-oscuro transition shadow-lg">
             Confirmar postulacion
           </button>
         </div>
@@ -185,10 +185,10 @@
 
       lista.forEach(v => {
         contenedor.innerHTML += `
-          <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-mi-verde hover:shadow-xl transition flex flex-col justify-between">
+          <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-mi-celeste hover:shadow-xl hover:shadow-mi-amarillo transition flex flex-col justify-between">
             <div>
               <div class="flex justify-between items-start mb-4">
-                <span class="bg-green-100 text-mi-verde text-[10px] font-black px-3 py-1 rounded-full uppercase font-helvetica">
+                <span class="bg-celeste-trasparente text-mi-celeste text-[10px] font-black px-3 py-1 rounded-full uppercase font-helvetica">
                   ${v.experiencia > 0 ? 'Con Exp.' : 'Primer Empleo'}
                 </span>
                 <span class="text-[10px] text-gray-400 font-bold uppercase font-helvetica">Cierre: ${v.fechaFin.toDate().toLocaleDateString()}</span>
@@ -201,10 +201,10 @@
               </div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <button onclick="verDetalleVacante('${v.id}')" class="w-full border border-mi-verde text-mi-verde font-bold py-3 rounded-xl hover:bg-green-50 transition">
+              <button onclick="verDetalleVacante('${v.id}')" class="w-full border border-mi-celeste text-mi-celeste font-bold py-3 rounded-xl hover:bg-celeste-trasparente transition">
                 Ver detalle
               </button>
-              <button onclick="intentarPostular('${v.id}')" class="w-full bg-mi-verde text-white font-bold py-3 rounded-xl hover:bg-green-800 transition shadow-lg">
+              <button onclick="intentarPostular('${v.id}')" class="w-full bg-mi-amarillo text-gray-800 font-bold py-3 rounded-xl hover:bg-amarillo-oscuro transition shadow-lg">
                 Postular ahora
               </button>
             </div>
