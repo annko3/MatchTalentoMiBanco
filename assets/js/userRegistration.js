@@ -14,11 +14,67 @@ import {
   signInWithPopup,
   updateProfile,
 } from "../firebase/config.js";
+import {
+  writeBatch,
+  serverTimestamp,
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 let emailTemp = "";
 let formaciones = [];
 let archivosTemporales = [];
 let experiencias = [];
+
+function normalizarTexto(valor = "") {
+  return String(valor).replace(/_/g, " ").trim();
+}
+
+function capitalizarPalabras(valor = "") {
+  return normalizarTexto(valor)
+    .split(" ")
+    .filter(Boolean)
+    .map((parte) => parte.charAt(0).toUpperCase() + parte.slice(1).toLowerCase())
+    .join(" ");
+}
+
+function obtenerTextoSeleccionado(id) {
+  const select = document.getElementById(id);
+  if (!select) return "";
+  const option = select.options[select.selectedIndex];
+  return option?.textContent?.trim() || "";
+}
+
+async function sincronizarPerfilCV(userId, formacionesGuardadas, experienciasGuardadas) {
+  const batch = writeBatch(db);
+
+  formacionesGuardadas.forEach((form) => {
+    const educacionRef = doc(db, "users", userId, "educacion", String(form.id));
+    batch.set(educacionRef, {
+      tipo: "Educación",
+      campo1: form.titulo,
+      campo2: form.institucion,
+      descripcion: `Estado: ${capitalizarPalabras(form.estado)}`,
+      inicio: `${form.desde.año || ""}-${String(form.desde.mes || "").padStart(2, "0")}`,
+      fin: `${form.hasta.año || ""}-${String(form.hasta.mes || "").padStart(2, "0")}`,
+      multimedia: form.multimedia || [],
+      creadoEn: serverTimestamp(),
+    });
+  });
+
+  experienciasGuardadas.forEach((exp) => {
+    const experienciaRef = doc(db, "users", userId, "experiencia", String(exp.id));
+    batch.set(experienciaRef, {
+      tipo: "Experiencia",
+      campo1: exp.cargo,
+      campo2: exp.empresa,
+      descripcion: exp.descripcion || "",
+      inicio: `${exp.desde.año || ""}-${String(exp.desde.mes || "").padStart(2, "0")}`,
+      fin: `${exp.hasta.año || ""}-${String(exp.hasta.mes || "").padStart(2, "0")}`,
+      creadoEn: serverTimestamp(),
+    });
+  });
+
+  await batch.commit();
+}
 
 // Función para mostrar mensajes
 function mostrarMensaje(titulo, mensaje, tipo = "success") {
@@ -391,7 +447,7 @@ async function subirTodosLosArchivos(userId) {
           const file = item.file;
           const extension = file.name.split(".").pop();
           const nombreArchivo = `${Date.now()}_${Math.random().toString(36).substring(7)}.${extension}`;
-          const path = `usuarios/${userId}/formaciones/${formacion.id}/${nombreArchivo}`;
+          const path = `users/${userId}/formaciones/${formacion.id}/${nombreArchivo}`;
 
           const storageRef = ref(storage, path);
           await uploadBytes(storageRef, file);
@@ -400,6 +456,8 @@ async function subirTodosLosArchivos(userId) {
           urlsFormacion.push({
             nombre: item.nombre,
             url: url,
+            path: path,
+            gsUrl: `gs://${storage.app.options.storageBucket}/${path}`,
             tipo: item.tipo,
             tamaño: item.tamaño,
             fecha: new Date(),
@@ -542,8 +600,8 @@ window.registrarUsuario = async function () {
   const email = document.getElementById("inputEmail2").value;
   const password = document.getElementById("inputPassword").value;
   const confirmPassword = document.getElementById("inputConfirmPassword").value;
-  const departamento = document.getElementById("selectDepartamento")?.value;
-  const distrito = document.getElementById("selectDistrito")?.value;
+  const departamento = obtenerTextoSeleccionado("selectDepartamento");
+  const distrito = obtenerTextoSeleccionado("selectDistrito");
   const birthDate = document.getElementById("inputBirthDate").value;
   const idType = document.getElementById("inputIdType").value;
   const idNumber = document.getElementById("inputIdNumber").value;
@@ -589,7 +647,11 @@ window.registrarUsuario = async function () {
       multimedia: archivosSubidos.find((f) => f.formacionId === form.id)?.archivos || [],
     }));
 
-    await setDoc(doc(db, "usuarios", user.uid), {
+    const cvInicial = formacionesParaGuardar
+      .flatMap((form) => form.multimedia || [])
+      .find((archivo) => archivo.tipo === "application/pdf");
+
+    await setDoc(doc(db, "users", user.uid), {
       nombres: nombres,
       apellidos: apellidos,
       email: email,
@@ -601,16 +663,24 @@ window.registrarUsuario = async function () {
       distrito: distrito,
       formaciones: formacionesParaGuardar,
       experiencias: experiencias,
+      cvNombre: cvInicial?.nombre || "",
+      cvUrl: cvInicial?.url || "",
+      cvPath: cvInicial?.path || "",
+      cvTipo: cvInicial?.tipo || "",
+      cvGsUrl: cvInicial?.gsUrl || "",
+      cvCargado: Boolean(cvInicial),
       fechaRegistro: new Date(),
-      rol: "usuario",
+      rol: "postulante",
       activo: true,
     });
+
+    await sincronizarPerfilCV(user.uid, formacionesParaGuardar, experiencias);
 
     mostrarMensaje("Éxito", "¡Usuario registrado correctamente!", "success");
     limpiarFormulario();
 
     setTimeout(() => {
-      alert("Usuario registrado exitosamente");
+      window.location.href = "./candidata/dashboard.html";
     }, 2000);
 
   } catch (error) {
@@ -640,16 +710,16 @@ document.getElementById("btn-google")?.addEventListener("click", async () => {
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
 
-    const userDoc = await getDoc(doc(db, "usuarios", user.uid));
+    const userDoc = await getDoc(doc(db, "users", user.uid));
 
     if (!userDoc.exists()) {
-      await setDoc(doc(db, "usuarios", user.uid), {
+      await setDoc(doc(db, "users", user.uid), {
         nombres: user.displayName?.split(" ")[0] || "",
         apellidos: user.displayName?.split(" ").slice(1).join(" ") || "",
         email: user.email,
-        fotoURL: user.photoURL || "",
+        fotoUrl: user.photoURL || "",
         fechaRegistro: new Date(),
-        rol: "usuario",
+        rol: "postulante",
         activo: true,
       });
     }
@@ -657,7 +727,7 @@ document.getElementById("btn-google")?.addEventListener("click", async () => {
     mostrarMensaje("Éxito", `Bienvenido ${user.displayName || "Usuario"}`, "success");
 
     setTimeout(() => {
-      alert("Redirigiendo...");
+      window.location.href = "./candidata/dashboard.html";
     }, 2000);
   } catch (error) {
     console.error(error);
@@ -687,7 +757,7 @@ function getNombreMes(numeroMes) {
 
 // Datos de ubicación
 const distritosPorDepartamento = {
-  lima: ["Lima", "Miraflores", "San Isidro", "San Borja", "Surco", "La Molina", "Barranco"],
+  lima: ["Cercado de Lima", "Ancón", "Ate", "Barranco", "Breña", "Carabayllo", "Chaclacayo", "Chorrillos", "Cieneguilla", "Comas", "El Agustino", "Independencia", "Jesús María", "La Molina", "La Victoria", "Lince", "Los Olivos", "Lurigancho", "Lurín", "Magdalena del Mar", "Miraflores", "Pachacámac", "Pucusana", "Pueblo Libre", "Puente Piedra", "Punta Hermosa", "Punta Negra", "Rímac", "San Bartolo", "San Borja", "San Isidro", "San Juan de Lurigancho", "San Juan de Miraflores", "San Luis", "San Martín de Porres", "San Miguel", "Santa Anita", "Santa María del Mar", "Santa Rosa", "Santiago de Surco", "Surquillo", "Villa El Salvador", "Villa María del Triunfo"],
   arequipa: ["Arequipa", "Cayma", "Yanahuara", "Sachaca", "Cerro Colorado", "Socabaya"],
   cusco: ["Cusco", "San Sebastián", "San Jerónimo", "Santiago", "Wanchaq"],
   piura: ["Piura", "Castilla", "Catacaos", "Veintiséis de Octubre"],
@@ -725,6 +795,19 @@ if (selectDepartamento) {
   });
 }
 
+function poblarDistritosLima() {
+  const selectDistrito = document.getElementById("selectDistrito");
+  if (!selectDistrito) return;
+
+  selectDistrito.innerHTML = '<option value="" disabled selected>Distrito de Lima</option>';
+  distritosPorDepartamento.lima.forEach((distrito) => {
+    const option = document.createElement("option");
+    option.value = distrito.toLowerCase().replace(/ /g, "_");
+    option.textContent = distrito;
+    selectDistrito.appendChild(option);
+  });
+}
+
 function llenarSelectoresAnios() {
   const anioActual = new Date().getFullYear();
   const anioInicio = 1980;
@@ -745,4 +828,5 @@ function llenarSelectoresAnios() {
 
 document.addEventListener("DOMContentLoaded", () => {
   llenarSelectoresAnios();
+  poblarDistritosLima();
 });

@@ -12,7 +12,15 @@
 
 <body>
   <main class="d-flex justify-content-center align-items-center vh-100">
-    <div class="col-11 col-md-8 col-lg-5 col-xl-4 bg-amarillo rounded-5 p-5">
+    <div class="col-11 col-md-8 col-lg-5 col-xl-4 bg-amarillo rounded-5 p-5 position-relative">
+      <a
+        href="./index.html"
+        class="position-absolute top-0 end-0 mt-3 me-3 d-inline-flex align-items-center justify-content-center rounded-circle text-dark text-decoration-none fw-bold"
+        style="width: 40px; height: 40px; background: rgba(255,255,255,0.6); font-size: 1.4rem;"
+        aria-label="Volver al inicio"
+      >
+        ×
+      </a>
       <div id="paso1" class="d-grid gap-3 text-center">
         <button id="btn-google" class="bg-naranja border-0 py-3 rounded-5 w-100 fw-bold">
           Continuar con Google
@@ -57,14 +65,20 @@
 
         <label for="inputLocation">Ubicacion *</label>
         <div class="row g-2">
-          <div class="col-6">
-            <select id="selectDepartamento" class="form-select py-3">
-              <option value="" disabled selected>Departamento</option>
-            </select>
+          <div class="col-12 col-md-4">
+            <input
+              type="text"
+              id="inputDepartamentoFijo"
+              class="form-control py-3"
+              value="Lima"
+              readonly
+              style="background-color: #e9ecef"
+            />
+            <input type="hidden" id="selectDepartamento" value="lima" />
           </div>
-          <div class="col-6">
+          <div class="col-12 col-md-8">
             <select id="selectDistrito" class="form-select py-3">
-              <option value="" disabled selected>Distrito</option>
+              <option value="" disabled selected>Distrito de Lima</option>
             </select>
           </div>
         </div>
