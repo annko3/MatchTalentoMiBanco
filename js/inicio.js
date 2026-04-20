@@ -239,14 +239,18 @@ function inicializarCarrusel3D() {
 	let angle = 0;
 	let targetAngle = 0;
 	let isDragging = false;
+	let activePointerId = null;
 	let startX = 0;
 	let startAngle = 0;
 	let paused = false;
 	let resumeTimeout = null;
+	let frameId = null;
 
 	function getRadius() {
 		const width = shell.offsetWidth;
-		return width < 240 ? width * 0.7 : width * 0.8;
+		if (window.innerWidth <= 640) return width * 0.88;
+		if (window.innerWidth <= 1024) return width * 0.96;
+		return width * 1.04;
 	}
 
 	function posicionarItems() {
@@ -260,10 +264,10 @@ function inicializarCarrusel3D() {
 	function render() {
 		angle += (targetAngle - angle) * 0.08;
 		if (!paused && !isDragging) {
-			targetAngle -= 0.15;
+			targetAngle -= 0.18;
 		}
 		shell.style.transform = `rotateX(-10deg) rotateY(${angle}deg)`;
-		requestAnimationFrame(render);
+		frameId = requestAnimationFrame(render);
 	}
 
 	function pauseTemporal() {
@@ -274,22 +278,25 @@ function inicializarCarrusel3D() {
 		}, 1400);
 	}
 
-	function onPointerDown(clientX) {
+	function onPointerDown(clientX, pointerId = null) {
 		isDragging = true;
+		activePointerId = pointerId;
 		paused = true;
 		startX = clientX;
 		startAngle = targetAngle;
 		shell.classList.add('is-dragging');
+		clearTimeout(resumeTimeout);
 	}
 
 	function onPointerMove(clientX) {
 		if (!isDragging) return;
 		const delta = clientX - startX;
-		targetAngle = startAngle + delta * 0.28;
+		targetAngle = startAngle + delta * 0.32;
 	}
 
 	function onPointerUp() {
 		isDragging = false;
+		activePointerId = null;
 		shell.classList.remove('is-dragging');
 		pauseTemporal();
 	}
@@ -306,20 +313,33 @@ function inicializarCarrusel3D() {
 		if (!isDragging) pauseTemporal();
 	});
 
-	shell.addEventListener('mousedown', (event) => onPointerDown(event.clientX));
-	window.addEventListener('mousemove', (event) => onPointerMove(event.clientX));
-	window.addEventListener('mouseup', onPointerUp);
+	shell.addEventListener('pointerdown', (event) => {
+		event.preventDefault();
+		shell.setPointerCapture(event.pointerId);
+		onPointerDown(event.clientX, event.pointerId);
+	});
 
-	shell.addEventListener('touchstart', (event) => {
-		onPointerDown(event.touches[0].clientX);
-	}, { passive: true });
+	shell.addEventListener('pointermove', (event) => {
+		if (!isDragging || activePointerId !== event.pointerId) return;
+		event.preventDefault();
+		onPointerMove(event.clientX);
+	});
 
-	window.addEventListener('touchmove', (event) => {
-		onPointerMove(event.touches[0].clientX);
-	}, { passive: true });
+	shell.addEventListener('pointerup', (event) => {
+		if (activePointerId !== event.pointerId) return;
+		shell.releasePointerCapture(event.pointerId);
+		onPointerUp();
+	});
 
-	window.addEventListener('touchend', onPointerUp);
+	shell.addEventListener('pointercancel', (event) => {
+		if (activePointerId !== event.pointerId) return;
+		onPointerUp();
+	});
+
 	window.addEventListener('resize', posicionarItems);
+	window.addEventListener('beforeunload', () => {
+		if (frameId) cancelAnimationFrame(frameId);
+	});
 
 	posicionarItems();
 	render();

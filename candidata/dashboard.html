@@ -30,14 +30,24 @@
 	<main class="max-w-6xl mx-auto px-6 pb-20 mt-8">
 		<div class="bg-mi-amarillo rounded-[40px] p-8 flex items-center justify-between shadow-xl mb-10 relative">
 			<div class="flex items-center gap-10">
-				<div
-					class="w-40 h-40 bg-white rounded-full border-4 border-white shadow-lg overflow-hidden cursor-pointer group relative"
-					onclick="document.getElementById('input-foto').click()">
-					<img id="user-foto-main" src="" alt="Foto de perfil" class="w-full h-full object-cover">
+				<div class="relative w-40 h-40">
 					<div
-						class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-						<i class="bx bxs-camera text-white text-3xl"></i>
+						class="w-40 h-40 bg-white rounded-full border-4 border-white shadow-lg overflow-hidden cursor-pointer group relative"
+						onclick="document.getElementById('input-foto').click()">
+						<img id="user-foto-main" src="" alt="Foto de perfil" class="w-full h-full object-cover">
+						<div
+							class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+							<i class="bx bxs-camera text-white text-3xl"></i>
+						</div>
 					</div>
+					<button
+						id="btn-eliminar-foto"
+						type="button"
+						class="hidden absolute -top-2 -right-2 w-9 h-9 rounded-full bg-mi-rojo text-white shadow-lg items-center justify-center border-2 border-white hover:scale-105 transition z-20"
+						onclick="event.stopPropagation(); eliminarFotoPerfil()"
+						aria-label="Eliminar foto de perfil">
+						<i class="bx bx-x text-xl leading-none"></i>
+					</button>
 				</div>
 
 				<div>
@@ -282,6 +292,7 @@
 		let cvPathActual = "";
 		let cvTipoActual = "";
 		let cvGsUrlActual = "";
+		let fotoPathActual = "";
 
 		const textosVacios = {
 			experiencia: "Carga tus experiencias para mejorar el match...",
@@ -289,6 +300,29 @@
 			certificaciones: "Agrega cursos, constancias y certificaciones relevantes...",
 			idiomas: "Agrega los idiomas que dominas y su nivel."
 		};
+
+		function obtenerAvatarPorDefecto() {
+			const nombre = document.getElementById("user-nombre")?.innerText?.trim() || "Candidata";
+			return `https://ui-avatars.com/api/?name=${encodeURIComponent(nombre)}&background=008f39&color=fff`;
+		}
+
+		function actualizarEstadoFoto(fotoUrl = "") {
+			const btnEliminar = document.getElementById("btn-eliminar-foto");
+			const imagen = document.getElementById("user-foto-main");
+			if (imagen) {
+				imagen.src = fotoUrl || obtenerAvatarPorDefecto();
+			}
+
+			if (btnEliminar) {
+				if (fotoUrl) {
+					btnEliminar.classList.remove("hidden");
+					btnEliminar.classList.add("flex");
+				} else {
+					btnEliminar.classList.add("hidden");
+					btnEliminar.classList.remove("flex");
+				}
+			}
+		}
 
 		function mostrarVacio(idContenedor, texto) {
 			document.getElementById(idContenedor).innerHTML = `<p class="text-sm opacity-60 font-helvetica">${texto}</p>`;
@@ -501,8 +535,8 @@
 				document.getElementById("user-email").innerText = d.email || "-";
 				document.getElementById("user-tel").innerText = d.telefono || "-";
 				document.getElementById("user-distrito").innerText = `${d.distrito || "Distrito"}, Lima`;
-				document.getElementById("user-foto-main").src =
-					d.fotoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.nombres || "Candidata")}&background=008f39&color=fff`;
+				fotoPathActual = d.fotoPath || "";
+				actualizarEstadoFoto(d.fotoUrl || "");
 
 				cvUrlActual = d.cvUrl || "";
 				cvPathActual = d.cvPath || "";
@@ -595,6 +629,33 @@
 		window.cerrarModalCV = () => {
 			document.getElementById("modal-cv-preview").classList.add("hidden");
 			document.getElementById("cv-preview-frame").src = "";
+		};
+
+		window.eliminarFotoPerfil = async () => {
+			const confirmar = confirm("¿Deseas quitar tu foto de perfil?");
+			if (!confirmar) return;
+
+			try {
+				if (fotoPathActual) {
+					try {
+						await deleteObject(ref(storage, fotoPathActual));
+					} catch (error) {
+						console.warn("No se pudo eliminar la foto anterior en Storage:", error);
+					}
+				}
+
+				await updateDoc(userRef, {
+					fotoUrl: "",
+					fotoPath: ""
+				});
+
+				fotoPathActual = "";
+				actualizarEstadoFoto("");
+				alert("Foto de perfil eliminada correctamente.");
+			} catch (error) {
+				console.error("Error al eliminar foto de perfil:", error);
+				alert("No se pudo eliminar la foto de perfil.");
+			}
 		};
 
 		window.abrirModalCV = () => {
@@ -745,6 +806,40 @@
 				} catch (error) {
 					console.error("Error al subir CV:", error);
 					alert("No se pudo subir el CV.");
+				}
+				e.target.value = "";
+			}
+		};
+
+		document.getElementById("input-foto").onchange = async (e) => {
+			const file = e.target.files[0];
+			if (file) {
+				try {
+					if (fotoPathActual) {
+						try {
+							await deleteObject(ref(storage, fotoPathActual));
+						} catch (error) {
+							console.warn("No se pudo eliminar la foto anterior:", error);
+						}
+					}
+
+					const storagePath = `fotos-perfil/${currentUser.uid}/${Date.now()}-${file.name}`;
+					const storageRef = ref(storage, storagePath);
+					await uploadBytes(storageRef, file);
+					const downloadURL = await getDownloadURL(storageRef);
+
+					await updateDoc(userRef, {
+						fotoUrl: downloadURL,
+						fotoPath: storagePath
+					});
+
+					fotoPathActual = storagePath;
+					actualizarEstadoFoto(downloadURL);
+
+					alert("Foto de perfil actualizada correctamente.");
+				} catch (error) {
+					console.error("Error al subir foto de perfil:", error);
+					alert("No se pudo subir la foto de perfil.");
 				}
 				e.target.value = "";
 			}

@@ -8,16 +8,22 @@
 .carousel-stage {
   perspective: 1400px;
   perspective-origin: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 410px;
 }
 
 .carousel-shell {
   position: relative;
-  width: min(62vw, 240px);
-  height: min(82vw, 340px);
+  width: clamp(190px, 28vw, 250px);
+  height: clamp(268px, 36vw, 344px);
   margin: 0 auto;
   transform-style: preserve-3d;
   cursor: grab;
   user-select: none;
+  will-change: transform;
+  touch-action: none;
 }
 
 .carousel-shell.is-dragging {
@@ -27,7 +33,7 @@
 .carousel-item {
   position: absolute;
   inset: 0;
-  border-radius: 26px;
+  border-radius: 24px;
   overflow: hidden;
   transform-style: preserve-3d;
   backface-visibility: hidden;
@@ -41,26 +47,53 @@
   height: 100%;
   object-fit: cover;
   filter: saturate(1.04);
+  pointer-events: none;
 }
 
 .carousel-caption {
   position: absolute;
   inset: auto 0 0 0;
-  padding: 0.95rem 1rem 1.1rem;
+  padding: 0.9rem 0.95rem 1rem;
   background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
   color: white;
 }
 
+.carousel-caption h3 {
+  font-size: clamp(0.95rem, 1vw + 0.65rem, 1.15rem);
+  line-height: 1.12;
+  max-width: 13ch;
+}
+
+.carousel-caption p {
+  font-size: 0.68rem;
+}
+
 @media (max-width: 1024px) {
+  .carousel-stage {
+    min-height: 365px;
+  }
+
   .carousel-shell {
-    width: min(70vw, 300px);
-    height: min(96vw, 360px);
+    width: clamp(190px, 52vw, 255px);
+    height: clamp(260px, 68vw, 335px);
   }
 }
 
 @media (max-width: 768px) {
+  .carousel-stage {
+    min-height: 325px;
+  }
+
   .carousel-shell {
-    width: min(76vw, 270px);
-    height: min(104vw, 320px);
+    width: clamp(185px, 62vw, 235px);
+    height: clamp(250px, 76vw, 305px);
+  }
+
+  .carousel-caption {
+    padding: 0.8rem 0.85rem 0.95rem;
+  }
+
+  .carousel-caption h3 {
+    max-width: 14ch;
   }
 }
