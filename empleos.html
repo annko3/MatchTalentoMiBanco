@@ -185,7 +185,7 @@
 
       lista.forEach(v => {
         contenedor.innerHTML += `
-          <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-mi-celeste hover:shadow-xl hover:shadow-mi-amarillo transition flex flex-col justify-between">
+          <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-mi-celeste hover:shadow-lg hover:shadow-amarillo-leve transition flex flex-col justify-between">
             <div>
               <div class="flex justify-between items-start mb-4">
                 <span class="bg-celeste-trasparente text-mi-celeste text-[10px] font-black px-3 py-1 rounded-full uppercase font-helvetica">
@@ -294,6 +294,9 @@
         }
 
         const perfil = await construirPerfilPostulante(user.uid);
+        if (!perfil.cvUrl) {
+          throw new Error('Completa tu perfil antes de postular. Debes subir tu CV en la seccion Documentos.');
+        }
         const resultadoMatch = await calcularMatch(vacanteSeleccionada, perfil);
 
         await addDoc(collection(db, 'postulaciones'), {
@@ -465,15 +468,10 @@ Reglas:
       try {
         const partesPrompt = [prompt];
 
-        if (perfil.cvGsUrl) {
-          partesPrompt.push({
-            fileData: {
-              mimeType: perfil.cvTipo || 'application/pdf',
-              fileUri: perfil.cvGsUrl
-            }
-          });
-        } else if (perfil.cvTexto) {
+        if (perfil.cvTexto) {
           partesPrompt.push(`Texto extraido del CV:\n${perfil.cvTexto}`);
+        } else if (perfil.cvNombre) {
+          partesPrompt.push(`CV cargado sin texto legible para extraer automaticamente. Nombre del archivo: ${perfil.cvNombre}. Evalua usando el perfil estructurado sin inventar informacion.`);
         }
 
         const result = await modeloMatchIA.generateContent(partesPrompt);
@@ -510,7 +508,10 @@ Reglas:
         if (!response.ok) return '';
 
         const pdfData = new Uint8Array(await response.arrayBuffer());
+        if (!pdfData.length) return '';
+
         const pdf = await pdfjsModule.getDocument({ data: pdfData }).promise;
+        if (!pdf.numPages) return '';
 
         const maxPages = Math.min(pdf.numPages, 3);
         let texto = '';

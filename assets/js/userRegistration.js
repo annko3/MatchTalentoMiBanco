@@ -834,4 +834,8 @@ function llenarSelectoresAnios() {
 document.addEventListener("DOMContentLoaded", () => {
   llenarSelectoresAnios();
   poblarDistritosLima();
+  const btnSeleccionarArchivos = document.getElementById("btnSeleccionarArchivos");
+  if (btnSeleccionarArchivos) {
+    btnSeleccionarArchivos.textContent = "+ Añadir CV o contenido multimedia";
+  }
 });

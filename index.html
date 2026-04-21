@@ -14,7 +14,7 @@
   <div id="navbar-placeholder"></div>
 
   <main>
-    <section class="hero-grid overflow-hidden px-4 md:px-8 lg:px-10 pt-10 md:pt-14 pb-20">
+    <section class="hero-grid hero-screen overflow-hidden px-4 md:px-8 lg:px-10 pt-10 md:pt-14 pb-20">
       <div class="max-w-7xl mx-auto grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
         <div class="text-white">
           <p class="text-mi-amarillo text-xs md:text-sm font-black uppercase tracking-[0.45em] mb-5">
@@ -92,16 +92,19 @@
           Nuestros beneficios
         </h2>
         <p class="text-white text-sm md:text-lg mb-16 opacity-80 font-helvetica max-w-3xl mx-auto">
-          En Mibanco buscamos contribuir con tu <strong>bienestar integral</strong> a través de diferentes beneficios en
+          En Mibanco buscamos contribuir con tu <strong>bienestar integral</strong> a traves de diferentes beneficios en
           cada aspecto de tu vida.
         </p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 justify-items-center">
-          <div class="group relative w-[280px] h-[260px] bg-white rounded-[20px] flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer">
-            <svg class="w-16 fill-mi-naranja transition-all duration-500 group-hover:scale-0" viewBox="0 0 24 24">
-              <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z" />
-            </svg>
+          <div class="group relative w-[280px] h-[260px] bg-white rounded-[20px] overflow-hidden shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer">
+            <div class="absolute inset-0 p-6 flex flex-col justify-center items-center text-center transition-all duration-500 group-hover:opacity-0 group-hover:-translate-y-4">
+              <p class="text-mi-naranja font-black text-2xl uppercase tracking-tighter">Bienestar <br> Fisico</p>
+            </div>
             <div class="absolute inset-0 p-6 bg-white border-b-[10px] border-mi-naranja flex flex-col justify-center text-center [transform-origin:bottom] [transform:rotateX(-90deg)] transition-all duration-500 group-hover:[transform:rotateX(0deg)]">
+              <svg class="w-14 mx-auto mb-4 fill-mi-naranja" viewBox="0 0 24 24">
+                <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z" />
+              </svg>
               <p class="text-mi-naranja font-black text-2xl uppercase tracking-tighter">Bienestar Fisico</p>
               <ul class="mt-3 text-[15px] font-helvetica text-gray-600 space-y-1 text-left list-disc list-inside">
                 <li>EPS y seguro medico</li>
@@ -111,11 +114,14 @@
             </div>
           </div>
 
-          <div class="group relative w-[280px] h-[260px] bg-white rounded-[20px] flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer">
-            <svg class="w-16 fill-mi-verde transition-all duration-500 group-hover:scale-0" viewBox="0 0 24 24">
-              <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z" />
-            </svg>
+          <div class="group relative w-[280px] h-[260px] bg-white rounded-[20px] overflow-hidden shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer">
+            <div class="absolute inset-0 p-6 flex flex-col justify-center items-center text-center transition-all duration-500 group-hover:opacity-0 group-hover:-translate-y-4">
+              <p class="text-mi-verde font-black text-2xl uppercase tracking-tighter">Bienestar Emocional</p>
+            </div>
             <div class="absolute inset-0 p-6 bg-white border-b-[10px] border-mi-amarillo flex flex-col justify-center text-center [transform-origin:bottom] [transform:rotateX(-90deg)] transition-all duration-500 group-hover:[transform:rotateX(0deg)]">
+              <svg class="w-14 mx-auto mb-4 fill-mi-verde" viewBox="0 0 24 24">
+                <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z" />
+              </svg>
               <p class="text-mi-verde font-black text-2xl uppercase tracking-tighter">Bienestar Emocional</p>
               <ul class="mt-3 text-[15px] font-helvetica text-gray-600 space-y-1 text-left list-disc list-inside">
                 <li>Acompañamiento psicologico</li>
@@ -125,11 +131,14 @@
             </div>
           </div>
 
-          <div class="group relative w-[280px] h-[260px] bg-white rounded-[20px] flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer">
-            <svg class="w-16 fill-mi-naranja transition-all duration-500 group-hover:scale-0" viewBox="0 0 24 24">
-              <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
-            </svg>
+          <div class="group relative w-[280px] h-[260px] bg-white rounded-[20px] overflow-hidden shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer">
+            <div class="absolute inset-0 p-6 flex flex-col justify-center items-center text-center transition-all duration-500 group-hover:opacity-0 group-hover:-translate-y-4">
+              <p class="text-mi-naranja font-black text-2xl uppercase tracking-tighter">Bienestar Financiero</p>
+            </div>
             <div class="absolute inset-0 p-6 bg-white border-b-[10px] border-mi-naranja flex flex-col justify-center text-center [transform-origin:bottom] [transform:rotateX(-90deg)] transition-all duration-500 group-hover:[transform:rotateX(0deg)]">
+              <svg class="w-14 mx-auto mb-4 fill-mi-naranja" viewBox="0 0 24 24">
+                <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" />
+              </svg>
               <p class="text-mi-naranja font-black text-2xl uppercase tracking-tighter">Bienestar Financiero</p>
               <ul class="mt-3 text-[15px] font-helvetica text-gray-600 space-y-1 text-left list-disc list-inside">
                 <li>Creditos BCP preferenciales</li>
@@ -139,11 +148,14 @@
             </div>
           </div>
 
-          <div class="group relative w-[280px] h-[260px] bg-white rounded-[20px] flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer">
-            <svg class="w-16 fill-mi-verde transition-all duration-500 group-hover:scale-0" viewBox="0 0 24 24">
-              <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
-            </svg>
+          <div class="group relative w-[280px] h-[260px] bg-white rounded-[20px] overflow-hidden shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer">
+            <div class="absolute inset-0 p-6 flex flex-col justify-center items-center text-center transition-all duration-500 group-hover:opacity-0 group-hover:-translate-y-4">
+              <p class="text-mi-verde font-black text-2xl uppercase tracking-tighter">Bienestar Laboral</p>
+            </div>
             <div class="absolute inset-0 p-6 bg-white border-b-[10px] border-mi-amarillo flex flex-col justify-center text-center [transform-origin:bottom] [transform:rotateX(-90deg)] transition-all duration-500 group-hover:[transform:rotateX(0deg)]">
+              <svg class="w-14 mx-auto mb-4 fill-mi-verde" viewBox="0 0 24 24">
+                <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
+              </svg>
               <p class="text-mi-verde font-black text-2xl uppercase tracking-tighter">Bienestar Laboral</p>
               <ul class="mt-3 text-[15px] font-helvetica text-gray-600 space-y-1 text-left list-disc list-inside">
                 <li>Linea de carrera activa</li>
@@ -164,9 +176,9 @@
             Explora puestos tech
           </h2>
           <p class="text-gray-500 mt-4 max-w-3xl mx-auto">
-            ¡Encuentra tu Match ideal! Al postular, 
-            nuestra IA analizará tu perfil y te mostrará un porcentaje de 
-            compatibilidad. Así sabrás qué tan alineadas están tus habilidades 
+            ¡Encuentra tu Match ideal! Al postular,
+            nuestra IA analizara tu perfil y te mostrara un porcentaje de
+            compatibilidad. Asi sabras que tan alineadas estan tus habilidades
             con los retos del puesto.
           </p>
         </div>

@@ -13,12 +13,12 @@
 <body class="bg-mi-verde min-h-screen">
 	<div id="navbar-placeholder"></div>
 
-	<main class="max-w-6xl mx-auto px-6 pb-20 mt-8">
-		<div class="bg-mi-amarillo rounded-[40px] p-8 flex items-center justify-between shadow-xl mb-10 relative">
-			<div class="flex items-center gap-10">
-				<div class="relative w-40 h-40">
+	<main class="max-w-6xl mx-auto px-4 md:px-6 pb-20 mt-6 md:mt-8">
+		<div class="bg-mi-amarillo rounded-[32px] md:rounded-[40px] p-5 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between shadow-xl mb-8 md:mb-10 relative gap-6">
+			<div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 md:gap-10 pr-10 md:pr-16">
+				<div class="relative w-32 h-32 md:w-40 md:h-40 shrink-0">
 					<div
-						class="w-40 h-40 bg-white rounded-full border-4 border-white shadow-lg overflow-hidden cursor-pointer group relative"
+						class="w-32 h-32 md:w-40 md:h-40 bg-white rounded-full border-4 border-white shadow-lg overflow-hidden cursor-pointer group relative"
 						onclick="document.getElementById('input-foto').click()">
 						<img id="user-foto-main" src="" alt="Foto de perfil" class="w-full h-full object-cover">
 						<div
@@ -36,8 +36,8 @@
 					</button>
 				</div>
 
-				<div>
-					<h1 id="user-nombre" class="text-3xl font-black text-gray-800 uppercase tracking-tighter font-helvetica">Cargando...
+				<div class="text-center sm:text-left min-w-0">
+					<h1 id="user-nombre" class="text-2xl md:text-3xl font-black text-gray-800 uppercase tracking-tighter font-helvetica break-words">Cargando...
 					</h1>
 					<p id="user-distrito" class="text-sm font-bold text-gray-700 font-helvetica mb-4">Distrito, Departamento</p>
 
@@ -55,15 +55,15 @@
 			</div>
 
 			<button onclick="abrirModalEdicion()"
-				class="absolute top-6 right-8 text-mi-rojo text-3xl hover:scale-110 transition">
+				class="absolute top-5 right-5 md:top-6 md:right-8 text-mi-rojo text-3xl hover:scale-110 transition">
 				<i class="bx bxs-edit"></i>
 			</button>
 		</div>
 
-		<div class="flex gap-10">
-			<aside class="w-64 bg-mi-amarillo rounded-[40px] p-8 h-fit shadow-xl flex flex-col gap-4">
+		<div class="flex flex-col lg:flex-row gap-6 lg:gap-10">
+			<aside class="w-full lg:w-64 bg-mi-amarillo rounded-[32px] md:rounded-[40px] p-5 md:p-8 h-fit shadow-xl flex flex-row lg:flex-col gap-3 md:gap-4 overflow-x-auto lg:overflow-visible">
 				<button onclick="mostrarSeccion('experiencia', this)"
-					class="nav-btn w-full py-3 px-6 bg-mi-azul-soft text-white font-bold rounded-full text-xs uppercase shadow-md transition">Experiencia</button>
+					class="nav-btn w-full min-w-max py-3 px-5 md:px-6 bg-mi-azul-soft text-white font-bold rounded-full text-xs uppercase shadow-md transition">Experiencia</button>
 				<button onclick="mostrarSeccion('educacion', this)"
 					class="nav-btn w-full py-3 px-6 text-gray-700 font-bold hover:bg-white/20 rounded-full text-xs uppercase transition">Educación</button>
 				<button onclick="mostrarSeccion('certificaciones', this)"
@@ -75,9 +75,9 @@
 			</aside>
 
 			<section class="flex-1 space-y-8">
-				<div id="sec-experiencia" class="seccion-perfil bg-mi-azul-soft rounded-[40px] p-10 text-white shadow-xl">
-					<div class="flex justify-between items-center mb-6">
-						<h2 class="text-2xl font-black uppercase font-helvetica tracking-widest text-white">Experiencia</h2>
+				<div id="sec-experiencia" class="seccion-perfil bg-mi-azul-soft rounded-[32px] md:rounded-[40px] p-5 md:p-10 text-white shadow-xl">
+					<div class="flex justify-between items-center gap-4 mb-6">
+						<h2 class="text-xl md:text-2xl font-black uppercase font-helvetica tracking-widest text-white">Experiencia</h2>
 						<i onclick="abrirModalItem('Experiencia')"
 							class="bx bx-plus text-mi-naranja text-4xl cursor-pointer hover:scale-110"></i>
 					</div>
@@ -112,25 +112,45 @@
 					<div id="cont-idiomas" class="space-y-4"></div>
 				</div>
 
-				<div id="sec-documentos" class="seccion-perfil hidden bg-mi-azul-soft rounded-[40px] p-10 text-white shadow-xl">
-					<div class="flex justify-between items-center mb-6">
-						<h2 class="text-2xl font-black uppercase font-helvetica tracking-widest text-white">Documentos</h2>
-						<i class="bx bx-upload text-mi-amarillo text-4xl cursor-pointer hover:scale-110"
-							onclick="document.getElementById('input-cv').click()"></i>
+				<div id="sec-documentos" class="seccion-perfil hidden bg-mi-azul-soft rounded-[32px] md:rounded-[40px] p-5 md:p-10 text-white shadow-xl">
+					<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+						<h2 class="text-xl md:text-2xl font-black uppercase font-helvetica tracking-widest text-white">Documentos</h2>
+						<div class="flex items-center gap-3 self-start sm:self-auto">
+							<button type="button" onclick="document.getElementById('input-documento-extra').click()"
+								class="bg-white/10 border border-white/20 px-4 py-2 rounded-full font-black text-xs uppercase hover:bg-white/20 transition">
+								Agregar respaldo
+							</button>
+							<i class="bx bx-upload text-mi-amarillo text-4xl cursor-pointer hover:scale-110"
+								onclick="document.getElementById('input-cv').click()"></i>
+						</div>
 					</div>
 
-					<div class="bg-white/10 p-6 rounded-3xl flex items-center justify-between border border-white/20">
-						<div class="flex items-center gap-4">
+					<div class="bg-white/10 p-5 md:p-6 rounded-3xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-white/20">
+						<div class="flex items-center gap-4 min-w-0">
 							<i class="bx bxs-file-pdf text-5xl text-mi-amarillo"></i>
-							<div>
+							<div class="min-w-0">
 								<p class="font-bold">Currículum Vitae (CV)</p>
-								<p id="cv-nombre" class="text-xs opacity-60">No cargado</p>
+								<p id="cv-nombre" class="text-xs opacity-60 break-all">No cargado</p>
 							</div>
 						</div>
-						<button id="btn-ver-cv"
-							class="hidden bg-mi-amarillo text-gray-800 px-6 py-2 rounded-full font-black text-xs">
-							Previsualizar
-						</button>
+						<div class="flex flex-wrap items-center gap-3">
+							<button id="btn-eliminar-cv"
+								class="hidden bg-white/15 text-white px-5 py-2 rounded-full font-black text-xs border border-white/20">
+								Eliminar
+							</button>
+							<button id="btn-ver-cv"
+								class="hidden bg-mi-amarillo text-gray-800 px-6 py-2 rounded-full font-black text-xs">
+								Previsualizar
+							</button>
+						</div>
+					</div>
+
+					<div class="mt-6">
+						<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+							<h3 class="text-sm font-black uppercase tracking-[0.25em] text-white/80">Documentos de respaldo</h3>
+							<p class="text-xs text-white/70">Constancias, certificados y otros PDF relacionados</p>
+						</div>
+						<div id="cont-documentos-extra" class="space-y-3"></div>
 					</div>
 				</div>
 			</section>
@@ -249,7 +269,8 @@
 		</div>
 	</div>
 
-	<input type="file" id="input-cv" accept=".pdf,.doc,.docx" class="hidden">
+	<input type="file" id="input-cv" accept=".pdf,application/pdf" class="hidden">
+	<input type="file" id="input-documento-extra" accept=".pdf,application/pdf" class="hidden">
 	<input type="file" id="input-foto" accept="image/*" class="hidden">
 
 	<script type="module">
@@ -284,7 +305,8 @@
 			experiencia: "Carga tus experiencias para mejorar el match...",
 			educacion: "Registra tus estudios (universidad, instituto)...",
 			certificaciones: "Agrega cursos, constancias y certificaciones relevantes...",
-			idiomas: "Agrega los idiomas que dominas y su nivel."
+			idiomas: "Agrega los idiomas que dominas y su nivel.",
+			documentos: "Aun no has agregado documentos de respaldo."
 		};
 
 		function obtenerAvatarPorDefecto() {
@@ -307,6 +329,23 @@
 					btnEliminar.classList.add("hidden");
 					btnEliminar.classList.remove("flex");
 				}
+			}
+		}
+
+		function actualizarEstadoCV() {
+			const btnVer = document.getElementById("btn-ver-cv");
+			const btnEliminar = document.getElementById("btn-eliminar-cv");
+			document.getElementById("cv-nombre").innerText = cvUrlActual
+				? (document.getElementById("cv-nombre").innerText || "CV cargado")
+				: "No cargado";
+
+			if (cvUrlActual) {
+				btnVer.classList.remove("hidden");
+				btnEliminar.classList.remove("hidden");
+			} else {
+				btnVer.classList.add("hidden");
+				btnEliminar.classList.add("hidden");
+				document.getElementById("cv-nombre").innerText = "No cargado";
 			}
 		}
 
@@ -390,6 +429,30 @@
       `;
 		}
 
+		function renderDocumentoExtra(item) {
+			return `
+				<div class="bg-white/10 p-4 rounded-3xl border border-white/20 flex items-center justify-between gap-4">
+					<div class="flex items-center gap-4 min-w-0">
+						<i class="bx bxs-file-pdf text-4xl text-mi-amarillo shrink-0"></i>
+						<div class="min-w-0">
+							<p class="font-bold truncate">${item.nombre || "Documento PDF"}</p>
+							<p class="text-xs text-white/70 truncate">${item.categoria || "Documento relacionado"}</p>
+						</div>
+					</div>
+					<div class="flex items-center gap-3 shrink-0">
+						<button onclick="previsualizarDocumentoExtra('${item.url}', '${(item.nombre || "Documento").replace(/'/g, "\\'")}','${item.tipo || "application/pdf"}')"
+							class="bg-mi-amarillo text-gray-800 px-4 py-2 rounded-full font-black text-[11px] uppercase">
+							Ver
+						</button>
+						<button onclick="eliminarDocumentoExtra('${item.id}', '${item.path || ""}')"
+							class="bg-white/15 text-white px-4 py-2 rounded-full font-black text-[11px] uppercase border border-white/20">
+							Eliminar
+						</button>
+					</div>
+				</div>
+			`;
+		}
+
 		async function cargarItems(nombreColeccion, idContenedor, renderFn) {
 			const contenedor = document.getElementById(idContenedor);
 			contenedor.innerHTML = "";
@@ -414,7 +477,8 @@
 				cargarItems("experiencia", "cont-experiencia", renderExperiencia),
 				cargarItems("educacion", "cont-educacion", renderEducacion),
 				cargarItems("certificaciones", "cont-certificaciones", renderCertificacion),
-				cargarItems("idiomas", "cont-idiomas", renderIdioma)
+				cargarItems("idiomas", "cont-idiomas", renderIdioma),
+				cargarItems("documentos", "cont-documentos-extra", renderDocumentoExtra)
 			]);
 		}
 
@@ -531,16 +595,14 @@
 				if (d.cvNombre) {
 					document.getElementById("cv-nombre").innerText = d.cvNombre;
 				}
-				if (cvUrlActual) {
-					document.getElementById("btn-ver-cv").classList.remove("hidden");
-				} else {
-					document.getElementById("btn-ver-cv").classList.add("hidden");
-				}
+				actualizarEstadoCV();
 
 				document.getElementById("edit-nombre").value = d.nombres || "";
 				document.getElementById("edit-tel").value = d.telefono || "";
 				document.getElementById("edit-distrito").value = d.distrito || "";
 			}
+
+			actualizarEstadoCV();
 
 			await cargarTodoElPerfil();
 		});
@@ -668,6 +730,80 @@
 			document.getElementById("modal-cv-preview").classList.remove("hidden");
 		};
 
+		window.previsualizarDocumentoExtra = (url, nombre, tipo = "application/pdf") => {
+			document.getElementById("cv-preview-titulo").innerText = nombre || "Documento";
+			document.getElementById("cv-preview-link").href = url;
+
+			const esPdf = tipo.includes("pdf") || String(url).toLowerCase().includes(".pdf");
+			if (esPdf) {
+				document.getElementById("cv-preview-frame").src = url;
+				document.getElementById("cv-preview-frame-wrapper").classList.remove("hidden");
+				document.getElementById("cv-preview-fallback").classList.add("hidden");
+			} else {
+				document.getElementById("cv-preview-frame").src = "";
+				document.getElementById("cv-preview-frame-wrapper").classList.add("hidden");
+				document.getElementById("cv-preview-fallback").classList.remove("hidden");
+			}
+
+			document.getElementById("modal-cv-preview").classList.remove("hidden");
+		};
+
+		window.eliminarCVPrincipal = async () => {
+			const confirmar = confirm("Â¿Deseas eliminar tu CV principal?");
+			if (!confirmar) return;
+
+			try {
+				if (cvPathActual) {
+					try {
+						await deleteObject(ref(storage, cvPathActual));
+					} catch (error) {
+						console.warn("No se pudo eliminar el CV en Storage:", error);
+					}
+				}
+
+				await updateDoc(userRef, {
+					cvNombre: "",
+					cvCargado: false,
+					cvUrl: "",
+					cvPath: "",
+					cvTipo: "",
+					cvGsUrl: ""
+				});
+
+				cvUrlActual = "";
+				cvPathActual = "";
+				cvTipoActual = "";
+				cvGsUrlActual = "";
+				actualizarEstadoCV();
+				alert("CV eliminado correctamente.");
+			} catch (error) {
+				console.error("Error al eliminar CV:", error);
+				alert("No se pudo eliminar el CV.");
+			}
+		};
+
+		window.eliminarDocumentoExtra = async (itemId, path) => {
+			const confirmar = confirm("Â¿Deseas eliminar este documento?");
+			if (!confirmar) return;
+
+			try {
+				if (path) {
+					try {
+						await deleteObject(ref(storage, path));
+					} catch (error) {
+						console.warn("No se pudo eliminar el documento en Storage:", error);
+					}
+				}
+
+				await deleteDoc(doc(db, "users", currentUser.uid, "documentos", itemId));
+				await cargarItems("documentos", "cont-documentos-extra", renderDocumentoExtra);
+				alert("Documento eliminado correctamente.");
+			} catch (error) {
+				console.error("Error al eliminar documento:", error);
+				alert("No se pudo eliminar el documento.");
+			}
+		};
+
 		window.editarItem = (coleccion, item) => {
 			const tipo = obtenerTipoDesdeColeccion(coleccion);
 			const cfg = obtenerConfiguracion(tipo);
@@ -753,11 +889,19 @@
 		};
 
 		document.getElementById("btn-ver-cv").onclick = () => abrirModalCV();
+		document.getElementById("btn-eliminar-cv").onclick = () => eliminarCVPrincipal();
 
 		document.getElementById("input-cv").onchange = async (e) => {
 			const file = e.target.files[0];
 			if (file) {
 				try {
+					const esPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+					if (!esPdf) {
+						alert("Por ahora solo se permiten CV en formato PDF.");
+						e.target.value = "";
+						return;
+					}
+
 					if (cvPathActual) {
 						try {
 							await deleteObject(ref(storage, cvPathActual));
@@ -786,12 +930,47 @@
 					cvTipoActual = file.type || "";
 					cvGsUrlActual = gsUrl;
 					document.getElementById("cv-nombre").innerText = file.name;
-					document.getElementById("btn-ver-cv").classList.remove("hidden");
+					actualizarEstadoCV();
 
 					alert(`CV "${file.name}" cargado correctamente.`);
 				} catch (error) {
 					console.error("Error al subir CV:", error);
 					alert("No se pudo subir el CV.");
+				}
+				e.target.value = "";
+			}
+		};
+
+		document.getElementById("input-documento-extra").onchange = async (e) => {
+			const file = e.target.files[0];
+			if (file) {
+				try {
+					const esPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+					if (!esPdf) {
+						alert("Solo puedes subir documentos PDF.");
+						e.target.value = "";
+						return;
+					}
+
+					const storagePath = `documentos/${currentUser.uid}/${Date.now()}-${file.name}`;
+					const storageRef = ref(storage, storagePath);
+					await uploadBytes(storageRef, file);
+					const downloadURL = await getDownloadURL(storageRef);
+
+					await addDoc(collection(db, "users", currentUser.uid, "documentos"), {
+						nombre: file.name,
+						url: downloadURL,
+						path: storagePath,
+						tipo: file.type || "application/pdf",
+						categoria: "Documento relacionado",
+						creadoEn: serverTimestamp()
+					});
+
+					await cargarItems("documentos", "cont-documentos-extra", renderDocumentoExtra);
+					alert(`Documento "${file.name}" cargado correctamente.`);
+				} catch (error) {
+					console.error("Error al subir documento relacionado:", error);
+					alert("No se pudo subir el documento.");
 				}
 				e.target.value = "";
 			}

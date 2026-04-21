@@ -5,6 +5,12 @@
     linear-gradient(135deg, #0f3a1b 0%, #0a7a33 48%, #0d5421 100%);
 }
 
+.hero-screen {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+}
+
 .carousel-stage {
   perspective: 1400px;
   perspective-origin: center;
@@ -80,6 +86,11 @@
 }
 
 @media (max-width: 768px) {
+  .hero-screen {
+    min-height: auto;
+    align-items: stretch;
+  }
+
   .carousel-stage {
     min-height: 325px;
   }
